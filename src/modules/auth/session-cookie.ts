@@ -10,12 +10,23 @@ export interface SessionJwtPayload {
   sid: string;
 }
 
+function resolveAuthSecret(): string | undefined {
+  const candidates = [process.env.AUTH_SECRET, process.env.SECRET_AUTH];
+  for (const candidate of candidates) {
+    const trimmed = candidate?.trim();
+    if (trimmed && trimmed.length >= 32) {
+      return trimmed;
+    }
+  }
+  return process.env.AUTH_SECRET?.trim() || process.env.SECRET_AUTH?.trim();
+}
+
 function getSecretKey(): Uint8Array {
-  const secret = process.env.AUTH_SECRET;
+  const secret = resolveAuthSecret();
   if (!secret || secret.length < 32) {
     if (process.env.NODE_ENV === "production") {
       throw new Error(
-        "AUTH_SECRET wajib diset minimal 32 karakter pada environment production.",
+        "AUTH_SECRET (atau SECRET_AUTH) wajib diset minimal 32 karakter pada environment production.",
       );
     }
     return new TextEncoder().encode(
