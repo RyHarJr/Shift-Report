@@ -1,0 +1,163 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum ChipperType {
+  HHQ_16
+  CAMURA_1
+  CAMURA_2
+}
+
+enum ShiftCode {
+  I
+  II
+  III
+}
+
+enum LayerType {
+  SINGLE_LAYER
+  MULTI_LAYER
+}
+
+enum PartCondition {
+  GOOD
+  WORN_OUT
+  BROKEN
+}
+
+model AdminUser {
+  id           String         @id @default(cuid())
+  username     String         @unique @db.VarChar(60)
+  name         String         @db.VarChar(120)
+  passwordHash String         @db.VarChar(255)
+  sessions     AdminSession[]
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  @@map("admin_users")
+}
+
+model AdminSession {
+  id        String    @id @default(cuid())
+  tokenHash String    @unique @db.VarChar(64)
+  userId    String
+  user      AdminUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime  @default(now())
+
+  @@index([userId])
+  @@index([expiresAt])
+  @@map("admin_sessions")
+}
+
+model ShiftReport {
+  id String @id @default(cuid())
+
+  // Header & Metadata (PDF Page 1)
+  customer             String      @default("PT Tanjung Enim Lestari") @db.VarChar(150)
+  reportDate           DateTime    @db.Date
+  inspectionBy         String      @db.VarChar(150)
+  chipperType          ChipperType
+  chipLengthSetUp      Float
+  typeOfKnifeSystem    String      @db.VarChar(100)
+  typeOfInspection     String      @default("Daily Inspection") @db.VarChar(100)
+  adjustChipLengthFrom Float?
+  adjustChipLengthTo   Float?
+  signature            String?     @db.Text
+  startChipperTime     String      @db.VarChar(10)
+  stopChipperTime      String      @db.VarChar(10)
+  shift                ShiftCode
+  samplingTime         String      @db.VarChar(10)
+
+  // Section 1: Chip Quality & Data Source / Sampling
+  oversize                 Float
+  overthick                Float
+  largeAccept              Float
+  smallAccept              Float
+  pin                      Float
+  fines                    Float
+  barkContent              Float
+  moisture                 Float
+  dataSourceChipClassifier Boolean @default(true)
+  samplingDoneByCostumer   Boolean @default(true)
+  totalAccept              Float
+  pinPlusFines             Float
+  chipQualityRemarks       String? @db.Text
+  chipQualityRemarksPhotoUrl String? @db.VarChar(500)
+
+  // Section 2: Operational Condition & Photo
+  layerObservation    LayerType?
+  logConditionDry     Boolean    @default(false)
+  logConditionFresh   Boolean    @default(false)
+  lotsOfBark          Boolean?
+  lotsOfSand          Boolean?
+  thereIsAStone       Boolean?
+  operationalPhotoUrl      String? @db.VarChar(500)
+  operationalPhotoCaption  String? @db.VarChar(255)
+  operationalPhotoUrl2     String? @db.VarChar(500)
+  operationalPhotoCaption2 String? @db.VarChar(255)
+  operationalPhotoUrl3     String? @db.VarChar(500)
+  operationalPhotoCaption3 String? @db.VarChar(255)
+  operationalPhotoUrl4     String? @db.VarChar(500)
+  operationalPhotoCaption4 String? @db.VarChar(255)
+
+  // Section 3: Chipper Condition -> 3.1 Geometry
+  tDimensionMm                  Float?
+  tDimensionLastSettingDate     DateTime? @db.Date
+  clearanceAnvilMm              Float?
+  clearanceAnvilLastSettingDate DateTime? @db.Date
+  geometryRemarks               String?   @db.Text
+  geometryRemarksPhotoUrl       String?   @db.VarChar(500)
+
+  // Section 3: Chipper Condition -> 3.2 Part
+  partKnife              PartCondition?
+  partClamps             PartCondition?
+  partHolder             PartCondition?
+  partKnifeBolt          PartCondition?
+  partWearPlate          PartCondition?
+  partFillerPiece        PartCondition?
+  partDiscCover          PartCondition?
+  partChipSlot           PartCondition?
+  partWings              PartCondition?
+  partBedKnife           PartCondition?
+  partSideWearPlateInner PartCondition?
+  partSideWearPlateOuter PartCondition?
+  partRemarks            String?        @db.Text
+  partRemarksPhotoUrl    String?        @db.VarChar(500)
+  partRemarks2           String?        @db.Text
+  partRemarks2PhotoUrl   String?        @db.VarChar(500)
+  partRemarks3           String?        @db.Text
+  partRemarks3PhotoUrl   String?        @db.VarChar(500)
+  partRemarks4           String?        @db.Text
+  partRemarks4PhotoUrl   String?        @db.VarChar(500)
+
+  // Section 4: Raw Material
+  logYardNumber       String? @db.VarChar(50)
+  logAgeYears         Float?
+  logAgingMonths      Float?
+  avgLogDiameterCm    Float?
+  logMoisturePct      Float?
+  diameterPct1        Float?
+  diameterMm1         Float?
+  diameterPct2        Float?
+  diameterMm2         Float?
+  rawMaterialRemarks         String? @db.Text
+  rawMaterialRemarksPhotoUrl String? @db.VarChar(500)
+  rawMaterialRemarks2        String? @db.Text
+  rawMaterialRemarks2PhotoUrl String? @db.VarChar(500)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([reportDate])
+  @@index([chipperType, reportDate])
+  @@index([shift])
+  @@index([createdAt])
+  @@map("shift_reports")
+}
+
