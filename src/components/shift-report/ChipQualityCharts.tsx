@@ -217,9 +217,9 @@ export function ChipQualityCharts({
               </div>
             </div>
           ) : (
-            <div className="rounded border border-border bg-background/40 p-4">
+            <div className="rounded border border-border bg-background/40 p-3 sm:p-4">
               {/* Compact Active Line Summary Chips */}
-              <div className="mb-4 flex flex-wrap items-center gap-2 border-b border-border pb-3">
+              <div className="mb-3 sm:mb-4 flex flex-wrap items-center gap-1.5 sm:gap-2 border-b border-border pb-2.5 sm:pb-3">
                 {activeDefinitions.map((line) => {
                   const latestRow =
                     chartRows.length > 0
@@ -233,7 +233,7 @@ export function ChipQualityCharts({
                   return (
                     <div
                       key={line.id}
-                      className="inline-flex items-center gap-2 rounded border border-border bg-surface px-2.5 py-1.5 text-xs"
+                      className="inline-flex items-center gap-1.5 sm:gap-2 rounded border border-border bg-surface px-2 py-1 text-[11px] sm:px-2.5 sm:py-1.5 sm:text-xs"
                     >
                       <span
                         className="inline-block size-2.5 rounded-full shrink-0"
@@ -272,11 +272,11 @@ export function ChipQualityCharts({
                   Tidak ada data inspeksi untuk filter yang dipilih.
                 </div>
               ) : (
-                <div className="h-80 sm:h-[420px] w-full min-w-0">
+                <div className="h-72 sm:h-[420px] w-full min-w-0">
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart
                       data={chartRows}
-                      margin={{ top: 12, right: 20, left: -4, bottom: 8 }}
+                      margin={{ top: 10, right: 12, left: -12, bottom: 8 }}
                     >
                       <CartesianGrid
                         stroke="#E2E8F0"
@@ -295,7 +295,7 @@ export function ChipQualityCharts({
                         tickLine={false}
                         axisLine={false}
                         unit="%"
-                        width={50}
+                        width={44}
                       />
                       <Tooltip content={<ChartTooltipContent />} />
                       <Legend
@@ -398,7 +398,7 @@ export function ChipQualityCharts({
           <div
             role="group"
             aria-label="Daftar metrik garis grafik chip quality"
-            className="space-y-1 max-h-96 overflow-y-auto pr-2 border-t border-border pt-2"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-1 max-h-56 lg:max-h-96 overflow-y-auto pr-1.5 border-t border-border pt-2"
           >
             {CHART_DEFINITIONS.map((def) => {
               const checked = selectedCharts.includes(def.id);

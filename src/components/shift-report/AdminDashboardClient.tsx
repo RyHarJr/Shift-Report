@@ -145,6 +145,24 @@ function buildQueryParams(filters: FilterState, page?: number): URLSearchParams 
   return params;
 }
 
+/**
+ * Parses an HTTP response body as JSON only when content exists (returns null for 204/empty bodies).
+ */
+async function readJsonSafely<T>(response: Response): Promise<T | null> {
+  if (response.status === 204 || response.status === 205) {
+    return null;
+  }
+  const raw = await response.text();
+  if (!raw.trim()) {
+    return null;
+  }
+  try {
+    return JSON.parse(raw) as T;
+  } catch {
+    return null;
+  }
+}
+
 export function AdminDashboardClient({
   initialItems,
   initialMeta,
@@ -223,14 +241,16 @@ export function AdminDashboardClient({
       const response = await fetch(`/api/shift-reports?${query.toString()}`, {
         cache: "no-store",
       });
-      const payload = (await response.json()) as {
+      const payload = await readJsonSafely<{
         success: boolean;
         data?: ShiftReportListDTO[];
         meta?: PaginationMeta;
         error?: { message?: string };
-      };
-      if (!response.ok || !payload.success || !payload.data || !payload.meta) {
-        throw new Error(payload.error?.message || "Gagal memuat daftar laporan.");
+      }>(response);
+      if (!response.ok || !payload?.success || !payload.data || !payload.meta) {
+        throw new Error(
+          payload?.error?.message || "Gagal memuat daftar laporan.",
+        );
       }
       setItems(payload.data);
       setMeta(payload.meta);
@@ -260,23 +280,34 @@ export function AdminDashboardClient({
         }),
       ]);
 
-      const listJson = (await listRes.json()) as {
-        success: boolean;
-        data?: ShiftReportListDTO[];
-        meta?: PaginationMeta;
-        error?: { message?: string };
-      };
-      const chartJson = (await chartRes.json()) as {
-        success: boolean;
-        data?: ShiftReportChartDTO[];
-        error?: { message?: string };
-      };
+      const [listJson, chartJson] = await Promise.all([
+        readJsonSafely<{
+          success: boolean;
+          data?: ShiftReportListDTO[];
+          meta?: PaginationMeta;
+          error?: { message?: string };
+        }>(listRes),
+        readJsonSafely<{
+          success: boolean;
+          data?: ShiftReportChartDTO[];
+          error?: { message?: string };
+        }>(chartRes),
+      ]);
 
-      if (!listRes.ok || !listJson.success || !listJson.data || !listJson.meta) {
-        throw new Error(listJson.error?.message || "Gagal memuat data laporan.");
+      if (
+        !listRes.ok ||
+        !listJson?.success ||
+        !listJson.data ||
+        !listJson.meta
+      ) {
+        throw new Error(
+          listJson?.error?.message || "Gagal memuat data laporan.",
+        );
       }
-      if (!chartRes.ok || !chartJson.success || !chartJson.data) {
-        throw new Error(chartJson.error?.message || "Gagal memuat data grafik.");
+      if (!chartRes.ok || !chartJson?.success || !chartJson.data) {
+        throw new Error(
+          chartJson?.error?.message || "Gagal memuat data grafik.",
+        );
       }
 
       setItems(listJson.data);
@@ -310,18 +341,18 @@ export function AdminDashboardClient({
   }
 
   async function handleConfirmDelete() {
-    if (!deleteTarget) return;
+    if (!deleteTarget || deleting) return;
     setDeleting(true);
     try {
       const response = await fetch(`/api/shift-reports/${deleteTarget.id}`, {
         method: "DELETE",
       });
-      const payload = (await response.json()) as {
-        success: boolean;
+      const payload = await readJsonSafely<{
+        success?: boolean;
         error?: { message?: string };
-      };
-      if (!response.ok || !payload.success) {
-        throw new Error(payload.error?.message || "Gagal menghapus laporan.");
+      }>(response);
+      if (!response.ok || (payload !== null && payload.success === false)) {
+        throw new Error(payload?.error?.message || "Gagal menghapus laporan.");
       }
 
       showToast("Shift Report berhasil dihapus.", "success");
@@ -358,8 +389,8 @@ export function AdminDashboardClient({
               riwayat inspeksi PT Tanjung Enim Lestari.
             </p>
           </div>
-          <Link href="/" className="shrink-0">
-            <Button size="md">
+          <Link href="/" className="w-full sm:w-auto shrink-0">
+            <Button size="md" className="w-full sm:w-auto">
               <Plus className="size-4" aria-hidden="true" />
               <span>Input Laporan Baru</span>
             </Button>
@@ -367,40 +398,40 @@ export function AdminDashboardClient({
         </div>
 
         {/* Summary KPIs */}
-        <div className="mb-5 grid grid-cols-2 gap-3 lg:grid-cols-4">
-          <div className="rounded border border-border bg-background/60 px-3.5 py-2.5">
+        <div className="mb-5 grid grid-cols-2 gap-2.5 sm:gap-3 lg:grid-cols-4">
+          <div className="rounded border border-border bg-background/60 px-3 py-2.5 sm:px-3.5">
             <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
               Total Laporan
             </p>
-            <p className="mt-1 font-mono text-xl font-bold text-foreground tabular-nums">
+            <p className="mt-1 font-mono text-lg sm:text-xl font-bold text-foreground tabular-nums">
               {meta.total}
             </p>
           </div>
-          <div className="rounded border border-border bg-background/60 px-3.5 py-2.5">
+          <div className="rounded border border-border bg-background/60 px-3 py-2.5 sm:px-3.5">
             <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
               Rata-rata Total Accept
             </p>
-            <p className="mt-1 font-mono text-xl font-bold text-success tabular-nums">
+            <p className="mt-1 font-mono text-lg sm:text-xl font-bold text-success tabular-nums">
               {summaryStats.avgTotalAccept !== null
                 ? `${formatNumber(summaryStats.avgTotalAccept, 2)}%`
                 : "—"}
             </p>
           </div>
-          <div className="rounded border border-border bg-background/60 px-3.5 py-2.5">
+          <div className="rounded border border-border bg-background/60 px-3 py-2.5 sm:px-3.5">
             <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
               Rata-rata P+F
             </p>
-            <p className="mt-1 font-mono text-xl font-bold text-foreground tabular-nums">
+            <p className="mt-1 font-mono text-lg sm:text-xl font-bold text-foreground tabular-nums">
               {summaryStats.avgPinPlusFines !== null
                 ? `${formatNumber(summaryStats.avgPinPlusFines, 2)}%`
                 : "—"}
             </p>
           </div>
-          <div className="rounded border border-border bg-background/60 px-3.5 py-2.5">
+          <div className="rounded border border-border bg-background/60 px-3 py-2.5 sm:px-3.5">
             <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
               Rata-rata Moisture
             </p>
-            <p className="mt-1 font-mono text-xl font-bold text-foreground tabular-nums">
+            <p className="mt-1 font-mono text-lg sm:text-xl font-bold text-foreground tabular-nums">
               {summaryStats.avgMoisture !== null
                 ? `${formatNumber(summaryStats.avgMoisture, 2)}%`
                 : "—"}
@@ -411,7 +442,7 @@ export function AdminDashboardClient({
         {/* Filter Controls */}
         <form
           onSubmit={handleFilterSubmit}
-          className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-6 items-end"
+          className="grid grid-cols-2 gap-2.5 sm:gap-3 lg:grid-cols-6 items-end"
         >
           <div>
             <label
@@ -501,7 +532,7 @@ export function AdminDashboardClient({
             />
           </div>
 
-          <div>
+          <div className="col-span-2 lg:col-span-1">
             <label
               htmlFor="filter-search"
               className="mb-1 block text-xs font-medium text-muted-foreground"
@@ -529,7 +560,7 @@ export function AdminDashboardClient({
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="col-span-2 lg:col-span-1 flex items-center gap-2">
             <Button type="submit" className="flex-1">
               <Filter className="size-4" aria-hidden="true" />
               <span>Terapkan</span>

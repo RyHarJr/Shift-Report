@@ -408,9 +408,9 @@ function RemarksPhotoAttachment({
               className="h-full w-full object-contain"
             />
           </div>
-          <div className="mt-1.5 flex items-center justify-between gap-2">
-            <label className="inline-flex h-7 items-center gap-1 rounded border border-border bg-surface px-2 text-[11px] font-medium hover:bg-surface-muted cursor-pointer">
-              <ImagePlus className="size-3" aria-hidden="true" />
+          <div className="mt-2 flex flex-wrap items-center justify-between gap-2">
+            <label className="inline-flex h-9 sm:h-7 items-center gap-1.5 rounded border border-border bg-surface px-2.5 text-xs sm:text-[11px] font-medium hover:bg-surface-muted cursor-pointer">
+              <ImagePlus className="size-3.5 sm:size-3" aria-hidden="true" />
               <span>{isUploading ? "Mengunggah..." : "Ganti Foto"}</span>
               <input
                 type="file"
@@ -423,15 +423,15 @@ function RemarksPhotoAttachment({
             <button
               type="button"
               onClick={onRemove}
-              className="inline-flex items-center gap-1 text-[11px] font-medium text-danger hover:underline cursor-pointer"
+              className="inline-flex h-9 sm:h-7 items-center gap-1 rounded px-2 text-xs sm:text-[11px] font-medium text-danger hover:bg-danger-bg/60 hover:underline cursor-pointer"
             >
-              <Trash2 className="size-3" aria-hidden="true" />
+              <Trash2 className="size-3.5 sm:size-3" aria-hidden="true" />
               <span>Hapus</span>
             </button>
           </div>
         </div>
       ) : (
-        <label className="flex h-8 w-full items-center justify-center gap-1.5 rounded border border-dashed border-border bg-surface px-2.5 text-[11px] font-medium text-muted-foreground hover:border-primary/60 hover:text-foreground transition-colors cursor-pointer">
+        <label className="flex h-10 sm:h-8 w-full items-center justify-center gap-1.5 rounded border border-dashed border-border bg-surface px-3 text-xs sm:text-[11px] font-medium text-muted-foreground hover:border-primary/60 hover:text-foreground transition-colors cursor-pointer">
           <ImagePlus className="size-3.5 shrink-0" aria-hidden="true" />
           <span>
             {isUploading ? "Mengunggah foto..." : "Unggah Foto (Opsional)"}
@@ -821,9 +821,9 @@ export function ShiftReportForm({
           PAGE 1 ENGINEERING SHEET
          ============================================================ */}
       <section className="relative rounded-lg border border-border bg-surface shadow-xs overflow-hidden">
-        <div className="p-4 sm:p-6 lg:p-8 space-y-6">
+        <div className="p-3.5 sm:p-6 lg:p-8 space-y-5 sm:space-y-6">
           {/* Title & Corporate Mark matching PDF */}
-          <div className="flex items-start justify-between gap-4 border-b border-border pb-4">
+          <div className="flex flex-wrap items-start justify-between gap-3 border-b border-border pb-4">
             <div>
               <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
                 Shift Report
@@ -1500,37 +1500,41 @@ export function ShiftReportForm({
                   return (
                     <div
                       key={item.key}
-                      className="grid grid-cols-12 items-center"
+                      className="flex flex-col gap-2 px-3 py-2.5 sm:grid sm:grid-cols-12 sm:items-center sm:gap-0 sm:p-0"
                     >
-                      <div className="col-span-2 px-3 py-2.5 border-r border-border-strong/50 text-center font-mono text-xs font-semibold">
-                        {item.code}
+                      <div className="flex items-center gap-2 sm:contents">
+                        <div className="shrink-0 font-mono text-xs font-semibold text-muted-foreground sm:text-foreground sm:col-span-2 sm:px-3 sm:py-2.5 sm:border-r sm:border-border-strong/50 sm:text-center">
+                          {item.code}
+                        </div>
+                        <div className="text-sm font-medium sm:col-span-4 sm:px-3 sm:py-2.5 sm:border-r sm:border-border-strong/50">
+                          {item.label}
+                        </div>
                       </div>
-                      <div className="col-span-4 px-3 py-2.5 border-r border-border-strong/50 text-sm font-medium">
-                        {item.label}
-                      </div>
-                      <div className="col-span-3 px-2 py-2 border-r border-border-strong/50">
-                        <label className="flex items-center justify-center gap-2 cursor-pointer text-sm">
-                          <input
-                            type="radio"
-                            name={item.key}
-                            checked={val === "yes"}
-                            onChange={() => setField(item.key, "yes")}
-                            className="size-4 accent-primary cursor-pointer"
-                          />
-                          <span>Yes</span>
-                        </label>
-                      </div>
-                      <div className="col-span-3 px-2 py-2">
-                        <label className="flex items-center justify-center gap-2 cursor-pointer text-sm">
-                          <input
-                            type="radio"
-                            name={item.key}
-                            checked={val === "no"}
-                            onChange={() => setField(item.key, "no")}
-                            className="size-4 accent-primary cursor-pointer"
-                          />
-                          <span>No</span>
-                        </label>
+                      <div className="grid grid-cols-2 gap-2 sm:contents">
+                        <div className="sm:col-span-3 sm:px-2 sm:py-2 sm:border-r sm:border-border-strong/50">
+                          <label className="flex min-h-10 sm:min-h-0 items-center justify-center gap-2 rounded border border-border sm:border-transparent bg-surface-muted/30 sm:bg-transparent px-3 py-1.5 sm:p-0 cursor-pointer text-sm">
+                            <input
+                              type="radio"
+                              name={item.key}
+                              checked={val === "yes"}
+                              onChange={() => setField(item.key, "yes")}
+                              className="size-4 accent-primary cursor-pointer"
+                            />
+                            <span>Yes</span>
+                          </label>
+                        </div>
+                        <div className="sm:col-span-3 sm:px-2 sm:py-2">
+                          <label className="flex min-h-10 sm:min-h-0 items-center justify-center gap-2 rounded border border-border sm:border-transparent bg-surface-muted/30 sm:bg-transparent px-3 py-1.5 sm:p-0 cursor-pointer text-sm">
+                            <input
+                              type="radio"
+                              name={item.key}
+                              checked={val === "no"}
+                              onChange={() => setField(item.key, "no")}
+                              className="size-4 accent-primary cursor-pointer"
+                            />
+                            <span>No</span>
+                          </label>
+                        </div>
                       </div>
                     </div>
                   );
@@ -1680,8 +1684,8 @@ export function ShiftReportForm({
           PAGE 2 ENGINEERING SHEET (Section 3 & Section 4)
          ============================================================ */}
       <section className="relative rounded-lg border border-border bg-surface shadow-xs overflow-hidden">
-        <div className="p-4 sm:p-6 lg:p-8 space-y-6">
-          <div className="flex items-center justify-between border-b border-border pb-3">
+        <div className="p-3.5 sm:p-6 lg:p-8 space-y-5 sm:space-y-6">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border pb-3">
             <div>
               <h2 className="text-lg font-bold tracking-tight text-foreground">
                 Chipper Condition &amp; Raw Material
@@ -1721,7 +1725,7 @@ export function ShiftReportForm({
                 <div className="px-3 py-2 text-center text-xs font-semibold bg-surface-muted/40">
                   Geometry
                 </div>
-                <div className="grid grid-cols-12 bg-surface-muted/30 text-xs font-semibold text-foreground">
+                <div className="hidden sm:grid sm:grid-cols-12 bg-surface-muted/30 text-xs font-semibold text-foreground">
                   <div className="col-span-2 px-3 py-2 border-r border-border-strong/50 text-center font-mono">
                     3.1
                   </div>
@@ -1737,81 +1741,101 @@ export function ShiftReportForm({
                 </div>
 
                 {/* 3.1.1 T Dimension */}
-                <div className="grid grid-cols-12 items-center">
-                  <div className="col-span-2 px-3 py-2.5 border-r border-border-strong/50 text-center font-mono text-xs font-semibold">
-                    3.1.1
+                <div className="flex flex-col gap-2 px-3 py-2.5 sm:grid sm:grid-cols-12 sm:items-center sm:gap-0 sm:p-0">
+                  <div className="flex items-center gap-2 sm:contents">
+                    <div className="shrink-0 font-mono text-xs font-semibold text-muted-foreground sm:text-foreground sm:col-span-2 sm:px-3 sm:py-2.5 sm:border-r sm:border-border-strong/50 sm:text-center">
+                      3.1.1
+                    </div>
+                    <label
+                      htmlFor="field-tDimensionMm"
+                      className="text-sm font-medium sm:col-span-4 sm:px-3 sm:py-2.5 sm:border-r sm:border-border-strong/50"
+                    >
+                      T Dimension
+                    </label>
                   </div>
-                  <label
-                    htmlFor="field-tDimensionMm"
-                    className="col-span-4 px-3 py-2.5 border-r border-border-strong/50 text-sm font-medium"
-                  >
-                    T Dimension
-                  </label>
-                  <div className="col-span-2 px-2 py-1.5 border-r border-border-strong/50">
-                    <input
-                      id="field-tDimensionMm"
-                      type="number"
-                      step="0.01"
-                      min="0"
-                      placeholder="0.0"
-                      value={form.tDimensionMm}
-                      onChange={(e) => setField("tDimensionMm", e.target.value)}
-                      className="h-9 w-full rounded border border-border bg-surface px-2 text-right text-sm font-mono tabular-nums focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                    />
-                  </div>
-                  <div className="col-span-4 px-2 py-1.5">
-                    <input
-                      id="field-tDimensionLastSettingDate"
-                      type="date"
-                      value={form.tDimensionLastSettingDate}
-                      onChange={(e) =>
-                        setField("tDimensionLastSettingDate", e.target.value)
-                      }
-                      aria-label="T Dimension Last Setting Date"
-                      className="h-9 w-full rounded border border-border bg-surface px-2 text-sm font-mono tabular-nums focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                    />
+                  <div className="grid grid-cols-12 gap-2 items-end sm:contents">
+                    <div className="col-span-5 sm:col-span-2 sm:px-2 sm:py-1.5 sm:border-r sm:border-border-strong/50">
+                      <span className="mb-1 block text-[11px] font-medium text-muted-foreground sm:hidden">
+                        Ukuran (mm)
+                      </span>
+                      <input
+                        id="field-tDimensionMm"
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        placeholder="0.0"
+                        value={form.tDimensionMm}
+                        onChange={(e) => setField("tDimensionMm", e.target.value)}
+                        className="h-10 sm:h-9 w-full rounded border border-border bg-surface px-2.5 sm:px-2 text-right text-sm font-mono tabular-nums focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                      />
+                    </div>
+                    <div className="col-span-7 sm:col-span-4 sm:px-2 sm:py-1.5">
+                      <span className="mb-1 block text-[11px] font-medium text-muted-foreground sm:hidden">
+                        Last Setting Date
+                      </span>
+                      <input
+                        id="field-tDimensionLastSettingDate"
+                        type="date"
+                        value={form.tDimensionLastSettingDate}
+                        onChange={(e) =>
+                          setField("tDimensionLastSettingDate", e.target.value)
+                        }
+                        aria-label="T Dimension Last Setting Date"
+                        className="h-10 sm:h-9 w-full rounded border border-border bg-surface px-2.5 sm:px-2 text-sm font-mono tabular-nums focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                      />
+                    </div>
                   </div>
                 </div>
 
                 {/* 3.2.2 Clearance Anvil (preserving exact PDF numbering 3.2.2) */}
-                <div className="grid grid-cols-12 items-center">
-                  <div className="col-span-2 px-3 py-2.5 border-r border-border-strong/50 text-center font-mono text-xs font-semibold">
-                    3.2.2
+                <div className="flex flex-col gap-2 px-3 py-2.5 sm:grid sm:grid-cols-12 sm:items-center sm:gap-0 sm:p-0">
+                  <div className="flex items-center gap-2 sm:contents">
+                    <div className="shrink-0 font-mono text-xs font-semibold text-muted-foreground sm:text-foreground sm:col-span-2 sm:px-3 sm:py-2.5 sm:border-r sm:border-border-strong/50 sm:text-center">
+                      3.2.2
+                    </div>
+                    <label
+                      htmlFor="field-clearanceAnvilMm"
+                      className="text-sm font-medium sm:col-span-4 sm:px-3 sm:py-2.5 sm:border-r sm:border-border-strong/50"
+                    >
+                      Clearance Anvil
+                    </label>
                   </div>
-                  <label
-                    htmlFor="field-clearanceAnvilMm"
-                    className="col-span-4 px-3 py-2.5 border-r border-border-strong/50 text-sm font-medium"
-                  >
-                    Clearance Anvil
-                  </label>
-                  <div className="col-span-2 px-2 py-1.5 border-r border-border-strong/50">
-                    <input
-                      id="field-clearanceAnvilMm"
-                      type="number"
-                      step="0.01"
-                      min="0"
-                      placeholder="0.0"
-                      value={form.clearanceAnvilMm}
-                      onChange={(e) =>
-                        setField("clearanceAnvilMm", e.target.value)
-                      }
-                      className="h-9 w-full rounded border border-border bg-surface px-2 text-right text-sm font-mono tabular-nums focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                    />
-                  </div>
-                  <div className="col-span-4 px-2 py-1.5">
-                    <input
-                      id="field-clearanceAnvilLastSettingDate"
-                      type="date"
-                      value={form.clearanceAnvilLastSettingDate}
-                      onChange={(e) =>
-                        setField(
-                          "clearanceAnvilLastSettingDate",
-                          e.target.value,
-                        )
-                      }
-                      aria-label="Clearance Anvil Last Setting Date"
-                      className="h-9 w-full rounded border border-border bg-surface px-2 text-sm font-mono tabular-nums focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                    />
+                  <div className="grid grid-cols-12 gap-2 items-end sm:contents">
+                    <div className="col-span-5 sm:col-span-2 sm:px-2 sm:py-1.5 sm:border-r sm:border-border-strong/50">
+                      <span className="mb-1 block text-[11px] font-medium text-muted-foreground sm:hidden">
+                        Ukuran (mm)
+                      </span>
+                      <input
+                        id="field-clearanceAnvilMm"
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        placeholder="0.0"
+                        value={form.clearanceAnvilMm}
+                        onChange={(e) =>
+                          setField("clearanceAnvilMm", e.target.value)
+                        }
+                        className="h-10 sm:h-9 w-full rounded border border-border bg-surface px-2.5 sm:px-2 text-right text-sm font-mono tabular-nums focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                      />
+                    </div>
+                    <div className="col-span-7 sm:col-span-4 sm:px-2 sm:py-1.5">
+                      <span className="mb-1 block text-[11px] font-medium text-muted-foreground sm:hidden">
+                        Last Setting Date
+                      </span>
+                      <input
+                        id="field-clearanceAnvilLastSettingDate"
+                        type="date"
+                        value={form.clearanceAnvilLastSettingDate}
+                        onChange={(e) =>
+                          setField(
+                            "clearanceAnvilLastSettingDate",
+                            e.target.value,
+                          )
+                        }
+                        aria-label="Clearance Anvil Last Setting Date"
+                        className="h-10 sm:h-9 w-full rounded border border-border bg-surface px-2.5 sm:px-2 text-sm font-mono tabular-nums focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1847,19 +1871,19 @@ export function ShiftReportForm({
             {/* 3.2 Part */}
             <div className="grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-border-strong/70">
               <div className="lg:col-span-8 divide-y divide-border-strong/50">
-                <div className="px-3 py-2 flex items-center justify-between bg-surface-muted/40">
-                  <span className="text-xs font-semibold">Part</span>
+                <div className="px-3 py-2 flex flex-wrap items-center justify-between gap-2 bg-surface-muted/40">
+                  <span className="text-xs font-semibold">Part (3.2)</span>
                   <button
                     type="button"
                     onClick={setAllPartsGood}
-                    className="inline-flex items-center gap-1 rounded border border-border bg-surface px-2.5 py-1 text-xs font-medium text-primary hover:bg-primary/5 transition-colors cursor-pointer"
+                    className="inline-flex h-8 sm:h-7 items-center gap-1 rounded border border-border bg-surface px-2.5 text-xs font-medium text-primary hover:bg-primary/5 transition-colors cursor-pointer"
                   >
                     <Check className="size-3.5" aria-hidden="true" />
                     Tandai Semua Good
                   </button>
                 </div>
 
-                <div className="grid grid-cols-12 bg-surface-muted/30 text-xs font-semibold text-foreground">
+                <div className="hidden sm:grid sm:grid-cols-12 bg-surface-muted/30 text-xs font-semibold text-foreground">
                   <div className="col-span-2 px-3 py-2 border-r border-border-strong/50 text-center font-mono">
                     3.2
                   </div>
@@ -1877,22 +1901,24 @@ export function ShiftReportForm({
                   return (
                     <div
                       key={part.key}
-                      className="grid grid-cols-12 items-center"
+                      className="flex flex-col gap-2 px-3 py-2.5 sm:grid sm:grid-cols-12 sm:items-center sm:gap-0 sm:p-0"
                     >
-                      <div className="col-span-2 px-2 py-2 border-r border-border-strong/50 text-center font-mono text-xs font-semibold self-stretch flex items-center justify-center">
-                        {part.code}
+                      <div className="flex items-center gap-2 sm:contents">
+                        <div className="shrink-0 font-mono text-xs font-semibold text-muted-foreground sm:text-foreground sm:col-span-2 sm:px-2 sm:py-2 sm:border-r sm:border-border-strong/50 sm:text-center sm:self-stretch sm:flex sm:items-center sm:justify-center">
+                          {part.code}
+                        </div>
+                        <div className="text-sm font-medium sm:col-span-4 sm:px-3 sm:py-2 sm:border-r sm:border-border-strong/50 sm:text-xs sm:self-stretch sm:flex sm:items-center">
+                          {part.label}
+                        </div>
                       </div>
-                      <div className="col-span-4 px-3 py-2 border-r border-border-strong/50 text-xs sm:text-sm font-medium self-stretch flex items-center">
-                        {part.label}
-                      </div>
-                      <div className="col-span-6 grid grid-cols-3 divide-x divide-border-strong/40 self-stretch">
+                      <div className="grid grid-cols-3 divide-x divide-border-strong/40 rounded border border-border-strong/40 overflow-hidden sm:rounded-none sm:border-0 sm:col-span-6 sm:self-stretch">
                         {PART_CONDITION_OPTIONS.map((opt) => {
                           const isSelected = currentVal === opt.value;
                           return (
                             <label
                               key={opt.value}
                               className={cn(
-                                "flex items-center justify-center gap-1.5 px-1.5 py-2 text-xs font-medium cursor-pointer transition-colors",
+                                "flex min-h-10 sm:min-h-0 items-center justify-center gap-1 sm:gap-1.5 px-1.5 py-2 text-xs font-medium cursor-pointer transition-colors",
                                 isSelected &&
                                   opt.value === "GOOD" &&
                                   "bg-success-bg text-success font-semibold",
@@ -2014,17 +2040,19 @@ export function ShiftReportForm({
             <div className="grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-border-strong/70">
               <div className="lg:col-span-8 divide-y divide-border-strong/50">
                 {/* 4.1 Log Yard Number */}
-                <div className="grid grid-cols-12 items-center">
-                  <div className="col-span-2 px-3 py-2.5 border-r border-border-strong/50 text-center font-mono text-xs font-semibold">
-                    4.1
+                <div className="flex flex-col gap-1.5 px-3 py-2.5 sm:grid sm:grid-cols-12 sm:items-center sm:gap-0 sm:p-0">
+                  <div className="flex items-center gap-2 sm:contents">
+                    <div className="shrink-0 font-mono text-xs font-semibold text-muted-foreground sm:text-foreground sm:col-span-2 sm:px-3 sm:py-2.5 sm:border-r sm:border-border-strong/50 sm:text-center">
+                      4.1
+                    </div>
+                    <label
+                      htmlFor="field-logYardNumber"
+                      className="text-sm font-medium sm:col-span-5 sm:px-3 sm:py-2.5 sm:border-r sm:border-border-strong/50"
+                    >
+                      Log Yard Number
+                    </label>
                   </div>
-                  <label
-                    htmlFor="field-logYardNumber"
-                    className="col-span-5 px-3 py-2.5 border-r border-border-strong/50 text-sm font-medium"
-                  >
-                    Log Yard Number
-                  </label>
-                  <div className="col-span-5 px-3 py-1.5">
+                  <div className="sm:col-span-5 sm:px-3 sm:py-1.5">
                     <input
                       id="field-logYardNumber"
                       type="text"
@@ -2032,140 +2060,158 @@ export function ShiftReportForm({
                       placeholder="Contoh: 12"
                       value={form.logYardNumber}
                       onChange={(e) => setField("logYardNumber", e.target.value)}
-                      className="h-9 w-full rounded border border-border bg-surface px-2.5 text-center text-sm font-mono tabular-nums focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                      className="h-10 sm:h-9 w-full rounded border border-border bg-surface px-2.5 text-left sm:text-center text-sm font-mono tabular-nums focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                     />
                   </div>
                 </div>
 
                 {/* 4.2 Log Age */}
-                <div className="grid grid-cols-12 items-center">
-                  <div className="col-span-2 px-3 py-2.5 border-r border-border-strong/50 text-center font-mono text-xs font-semibold">
-                    4.2
+                <div className="flex flex-col gap-1.5 px-3 py-2.5 sm:grid sm:grid-cols-12 sm:items-center sm:gap-0 sm:p-0">
+                  <div className="flex items-center gap-2 sm:contents">
+                    <div className="shrink-0 font-mono text-xs font-semibold text-muted-foreground sm:text-foreground sm:col-span-2 sm:px-3 sm:py-2.5 sm:border-r sm:border-border-strong/50 sm:text-center">
+                      4.2
+                    </div>
+                    <label
+                      htmlFor="field-logAgeYears"
+                      className="text-sm font-medium sm:col-span-5 sm:px-3 sm:py-2.5 sm:border-r sm:border-border-strong/50"
+                    >
+                      Log Age
+                    </label>
                   </div>
-                  <label
-                    htmlFor="field-logAgeYears"
-                    className="col-span-5 px-3 py-2.5 border-r border-border-strong/50 text-sm font-medium"
-                  >
-                    Log Age
-                  </label>
-                  <div className="col-span-3 px-3 py-1.5 border-r border-border-strong/50">
-                    <input
-                      id="field-logAgeYears"
-                      type="number"
-                      step="0.1"
-                      min="0"
-                      placeholder="0"
-                      value={form.logAgeYears}
-                      onChange={(e) => setField("logAgeYears", e.target.value)}
-                      className="h-9 w-full rounded border border-border bg-surface px-2.5 text-center text-sm font-mono tabular-nums focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                    />
-                  </div>
-                  <div className="col-span-2 px-2 py-2.5 text-center text-xs font-medium text-muted-foreground">
-                    Years
+                  <div className="flex items-center gap-2 sm:contents">
+                    <div className="flex-1 sm:col-span-3 sm:px-3 sm:py-1.5 sm:border-r sm:border-border-strong/50">
+                      <input
+                        id="field-logAgeYears"
+                        type="number"
+                        step="0.1"
+                        min="0"
+                        placeholder="0"
+                        value={form.logAgeYears}
+                        onChange={(e) => setField("logAgeYears", e.target.value)}
+                        className="h-10 sm:h-9 w-full rounded border border-border bg-surface px-2.5 text-center text-sm font-mono tabular-nums focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                      />
+                    </div>
+                    <div className="shrink-0 w-16 sm:w-auto sm:col-span-2 px-2 py-2.5 text-center text-xs font-medium text-muted-foreground">
+                      Years
+                    </div>
                   </div>
                 </div>
 
                 {/* 4.3 Log Aging In Storage */}
-                <div className="grid grid-cols-12 items-center">
-                  <div className="col-span-2 px-3 py-2.5 border-r border-border-strong/50 text-center font-mono text-xs font-semibold">
-                    4.3
+                <div className="flex flex-col gap-1.5 px-3 py-2.5 sm:grid sm:grid-cols-12 sm:items-center sm:gap-0 sm:p-0">
+                  <div className="flex items-center gap-2 sm:contents">
+                    <div className="shrink-0 font-mono text-xs font-semibold text-muted-foreground sm:text-foreground sm:col-span-2 sm:px-3 sm:py-2.5 sm:border-r sm:border-border-strong/50 sm:text-center">
+                      4.3
+                    </div>
+                    <label
+                      htmlFor="field-logAgingMonths"
+                      className="text-sm font-medium sm:col-span-5 sm:px-3 sm:py-2.5 sm:border-r sm:border-border-strong/50"
+                    >
+                      Log Aging In Storage
+                    </label>
                   </div>
-                  <label
-                    htmlFor="field-logAgingMonths"
-                    className="col-span-5 px-3 py-2.5 border-r border-border-strong/50 text-sm font-medium"
-                  >
-                    Log Aging In Storage
-                  </label>
-                  <div className="col-span-3 px-3 py-1.5 border-r border-border-strong/50">
-                    <input
-                      id="field-logAgingMonths"
-                      type="number"
-                      step="0.1"
-                      min="0"
-                      placeholder="0"
-                      value={form.logAgingMonths}
-                      onChange={(e) =>
-                        setField("logAgingMonths", e.target.value)
-                      }
-                      className="h-9 w-full rounded border border-border bg-surface px-2.5 text-center text-sm font-mono tabular-nums focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                    />
-                  </div>
-                  <div className="col-span-2 px-2 py-2.5 text-center text-xs font-medium text-muted-foreground">
-                    Months
+                  <div className="flex items-center gap-2 sm:contents">
+                    <div className="flex-1 sm:col-span-3 sm:px-3 sm:py-1.5 sm:border-r sm:border-border-strong/50">
+                      <input
+                        id="field-logAgingMonths"
+                        type="number"
+                        step="0.1"
+                        min="0"
+                        placeholder="0"
+                        value={form.logAgingMonths}
+                        onChange={(e) =>
+                          setField("logAgingMonths", e.target.value)
+                        }
+                        className="h-10 sm:h-9 w-full rounded border border-border bg-surface px-2.5 text-center text-sm font-mono tabular-nums focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                      />
+                    </div>
+                    <div className="shrink-0 w-16 sm:w-auto sm:col-span-2 px-2 py-2.5 text-center text-xs font-medium text-muted-foreground">
+                      Months
+                    </div>
                   </div>
                 </div>
 
                 {/* 4.4 Avg. Log Diameter */}
-                <div className="grid grid-cols-12 items-center">
-                  <div className="col-span-2 px-3 py-2.5 border-r border-border-strong/50 text-center font-mono text-xs font-semibold">
-                    4.4
+                <div className="flex flex-col gap-1.5 px-3 py-2.5 sm:grid sm:grid-cols-12 sm:items-center sm:gap-0 sm:p-0">
+                  <div className="flex items-center gap-2 sm:contents">
+                    <div className="shrink-0 font-mono text-xs font-semibold text-muted-foreground sm:text-foreground sm:col-span-2 sm:px-3 sm:py-2.5 sm:border-r sm:border-border-strong/50 sm:text-center">
+                      4.4
+                    </div>
+                    <label
+                      htmlFor="field-avgLogDiameterCm"
+                      className="text-sm font-medium sm:col-span-5 sm:px-3 sm:py-2.5 sm:border-r sm:border-border-strong/50"
+                    >
+                      Avg. Log Diameter
+                    </label>
                   </div>
-                  <label
-                    htmlFor="field-avgLogDiameterCm"
-                    className="col-span-5 px-3 py-2.5 border-r border-border-strong/50 text-sm font-medium"
-                  >
-                    Avg. Log Diameter
-                  </label>
-                  <div className="col-span-3 px-3 py-1.5 border-r border-border-strong/50">
-                    <input
-                      id="field-avgLogDiameterCm"
-                      type="number"
-                      step="0.1"
-                      min="0"
-                      placeholder="0"
-                      value={form.avgLogDiameterCm}
-                      onChange={(e) =>
-                        setField("avgLogDiameterCm", e.target.value)
-                      }
-                      className="h-9 w-full rounded border border-border bg-surface px-2.5 text-center text-sm font-mono tabular-nums focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                    />
-                  </div>
-                  <div className="col-span-2 px-2 py-2.5 text-center text-xs font-medium text-muted-foreground">
-                    cm
+                  <div className="flex items-center gap-2 sm:contents">
+                    <div className="flex-1 sm:col-span-3 sm:px-3 sm:py-1.5 sm:border-r sm:border-border-strong/50">
+                      <input
+                        id="field-avgLogDiameterCm"
+                        type="number"
+                        step="0.1"
+                        min="0"
+                        placeholder="0"
+                        value={form.avgLogDiameterCm}
+                        onChange={(e) =>
+                          setField("avgLogDiameterCm", e.target.value)
+                        }
+                        className="h-10 sm:h-9 w-full rounded border border-border bg-surface px-2.5 text-center text-sm font-mono tabular-nums focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                      />
+                    </div>
+                    <div className="shrink-0 w-16 sm:w-auto sm:col-span-2 px-2 py-2.5 text-center text-xs font-medium text-muted-foreground">
+                      cm
+                    </div>
                   </div>
                 </div>
 
                 {/* 4.5 Log Moisture */}
-                <div className="grid grid-cols-12 items-center">
-                  <div className="col-span-2 px-3 py-2.5 border-r border-border-strong/50 text-center font-mono text-xs font-semibold">
-                    4.5
+                <div className="flex flex-col gap-1.5 px-3 py-2.5 sm:grid sm:grid-cols-12 sm:items-center sm:gap-0 sm:p-0">
+                  <div className="flex items-center gap-2 sm:contents">
+                    <div className="shrink-0 font-mono text-xs font-semibold text-muted-foreground sm:text-foreground sm:col-span-2 sm:px-3 sm:py-2.5 sm:border-r sm:border-border-strong/50 sm:text-center">
+                      4.5
+                    </div>
+                    <label
+                      htmlFor="field-logMoisturePct"
+                      className="text-sm font-medium sm:col-span-5 sm:px-3 sm:py-2.5 sm:border-r sm:border-border-strong/50"
+                    >
+                      Log Moisture
+                    </label>
                   </div>
-                  <label
-                    htmlFor="field-logMoisturePct"
-                    className="col-span-5 px-3 py-2.5 border-r border-border-strong/50 text-sm font-medium"
-                  >
-                    Log Moisture
-                  </label>
-                  <div className="col-span-3 px-3 py-1.5 border-r border-border-strong/50">
-                    <input
-                      id="field-logMoisturePct"
-                      type="number"
-                      step="0.1"
-                      min="0"
-                      max="100"
-                      placeholder="0"
-                      value={form.logMoisturePct}
-                      onChange={(e) =>
-                        setField("logMoisturePct", e.target.value)
-                      }
-                      className="h-9 w-full rounded border border-border bg-surface px-2.5 text-center text-sm font-mono tabular-nums focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                    />
-                  </div>
-                  <div className="col-span-2 px-2 py-2.5 text-center text-xs font-medium text-muted-foreground">
-                    %
+                  <div className="flex items-center gap-2 sm:contents">
+                    <div className="flex-1 sm:col-span-3 sm:px-3 sm:py-1.5 sm:border-r sm:border-border-strong/50">
+                      <input
+                        id="field-logMoisturePct"
+                        type="number"
+                        step="0.1"
+                        min="0"
+                        max="100"
+                        placeholder="0"
+                        value={form.logMoisturePct}
+                        onChange={(e) =>
+                          setField("logMoisturePct", e.target.value)
+                        }
+                        className="h-10 sm:h-9 w-full rounded border border-border bg-surface px-2.5 text-center text-sm font-mono tabular-nums focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                      />
+                    </div>
+                    <div className="shrink-0 w-16 sm:w-auto sm:col-span-2 px-2 py-2.5 text-center text-xs font-medium text-muted-foreground">
+                      %
+                    </div>
                   </div>
                 </div>
 
                 {/* 4.6 Percentage Log Diameter (exact 2 pairs: XX % XX MM XX % XX MM) */}
-                <div className="grid grid-cols-12 items-center">
-                  <div className="col-span-2 px-3 py-2.5 border-r border-border-strong/50 text-center font-mono text-xs font-semibold">
-                    4.6
+                <div className="flex flex-col gap-2 px-3 py-2.5 sm:grid sm:grid-cols-12 sm:items-center sm:gap-0 sm:p-0">
+                  <div className="flex items-center gap-2 sm:contents">
+                    <div className="shrink-0 font-mono text-xs font-semibold text-muted-foreground sm:text-foreground sm:col-span-2 sm:px-3 sm:py-2.5 sm:border-r sm:border-border-strong/50 sm:text-center">
+                      4.6
+                    </div>
+                    <div className="text-sm font-medium sm:col-span-5 sm:px-3 sm:py-2.5 sm:border-r sm:border-border-strong/50">
+                      Percentage Log Diameter
+                    </div>
                   </div>
-                  <div className="col-span-5 px-3 py-2.5 border-r border-border-strong/50 text-sm font-medium">
-                    Percentage Log Diameter
-                  </div>
-                  <div className="col-span-5 p-2 grid grid-cols-2 gap-2">
-                    <div className="flex items-center gap-1">
+                  <div className="sm:col-span-5 sm:p-2 grid grid-cols-1 lg:grid-cols-2 gap-2">
+                    <div className="flex items-center gap-1.5">
                       <input
                         id="field-diameterPct1"
                         type="number"
@@ -2178,9 +2224,9 @@ export function ShiftReportForm({
                         onChange={(e) =>
                           setField("diameterPct1", e.target.value)
                         }
-                        className="h-9 w-full rounded border border-border bg-surface px-1.5 text-center text-xs font-mono tabular-nums focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                        className="h-10 sm:h-9 w-full rounded border border-border bg-surface px-2 sm:px-1.5 text-center text-sm sm:text-xs font-mono tabular-nums focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                       />
-                      <span className="text-xs font-mono text-muted-foreground">
+                      <span className="shrink-0 text-xs font-mono text-muted-foreground">
                         %
                       </span>
                       <input
@@ -2194,14 +2240,14 @@ export function ShiftReportForm({
                         onChange={(e) =>
                           setField("diameterMm1", e.target.value)
                         }
-                        className="h-9 w-full rounded border border-border bg-surface px-1.5 text-center text-xs font-mono tabular-nums focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                        className="h-10 sm:h-9 w-full rounded border border-border bg-surface px-2 sm:px-1.5 text-center text-sm sm:text-xs font-mono tabular-nums focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                       />
-                      <span className="text-xs font-mono text-muted-foreground">
+                      <span className="shrink-0 text-xs font-mono text-muted-foreground">
                         MM
                       </span>
                     </div>
 
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-1.5">
                       <input
                         id="field-diameterPct2"
                         type="number"
@@ -2214,9 +2260,9 @@ export function ShiftReportForm({
                         onChange={(e) =>
                           setField("diameterPct2", e.target.value)
                         }
-                        className="h-9 w-full rounded border border-border bg-surface px-1.5 text-center text-xs font-mono tabular-nums focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                        className="h-10 sm:h-9 w-full rounded border border-border bg-surface px-2 sm:px-1.5 text-center text-sm sm:text-xs font-mono tabular-nums focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                       />
-                      <span className="text-xs font-mono text-muted-foreground">
+                      <span className="shrink-0 text-xs font-mono text-muted-foreground">
                         %
                       </span>
                       <input
@@ -2230,9 +2276,9 @@ export function ShiftReportForm({
                         onChange={(e) =>
                           setField("diameterMm2", e.target.value)
                         }
-                        className="h-9 w-full rounded border border-border bg-surface px-1.5 text-center text-xs font-mono tabular-nums focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                        className="h-10 sm:h-9 w-full rounded border border-border bg-surface px-2 sm:px-1.5 text-center text-sm sm:text-xs font-mono tabular-nums focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                       />
-                      <span className="text-xs font-mono text-muted-foreground">
+                      <span className="shrink-0 text-xs font-mono text-muted-foreground">
                         MM
                       </span>
                     </div>
@@ -2292,12 +2338,13 @@ export function ShiftReportForm({
           Field bertanda <span className="text-danger font-semibold">*</span> wajib
           diisi. Total Accept &amp; P+F dihitung otomatis.
         </p>
-        <div className="flex items-center justify-end gap-3">
+        <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-2.5 sm:gap-3">
           {mode === "edit" ? (
             <Button
               variant="outline"
               onClick={() => router.push("/admin")}
               disabled={submitting}
+              className="w-full sm:w-auto"
             >
               Batal
             </Button>
@@ -2310,12 +2357,18 @@ export function ShiftReportForm({
                 setPhotoErrors({});
               }}
               disabled={submitting}
+              className="w-full sm:w-auto"
             >
               <RotateCcw className="size-4" aria-hidden="true" />
               <span>Reset Form</span>
             </Button>
           )}
-          <Button type="submit" size="lg" loading={submitting}>
+          <Button
+            type="submit"
+            size="lg"
+            loading={submitting}
+            className="w-full sm:w-auto"
+          >
             <Save className="size-4" aria-hidden="true" />
             <span>
               {mode === "edit" ? "Simpan Perubahan" : "Simpan Shift Report"}

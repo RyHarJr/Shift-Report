@@ -86,7 +86,7 @@ export function ShiftReportPrintView({ report }: ShiftReportPrintViewProps) {
     <div className="space-y-6">
       {/* Screen-only Action Toolbar */}
       <div className="no-print flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between rounded-lg border border-border bg-surface px-4 py-3 shadow-xs">
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
           <Link href="/admin">
             <Button variant="outline" size="sm">
               <ArrowLeft className="size-4" aria-hidden="true" />
@@ -102,21 +102,25 @@ export function ShiftReportPrintView({ report }: ShiftReportPrintViewProps) {
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2">
-          <Link href={`/admin/reports/${report.id}/edit`}>
-            <Button variant="outline" size="sm">
+        <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-2 w-full sm:w-auto">
+          <Link href={`/admin/reports/${report.id}/edit`} className="w-full sm:w-auto">
+            <Button variant="outline" size="sm" className="w-full sm:w-auto">
               <Pencil className="size-4" aria-hidden="true" />
               <span>Edit Laporan</span>
             </Button>
           </Link>
           <a
             href={`/api/shift-reports/${report.id}/pdf`}
-            className="inline-flex h-9 items-center justify-center gap-1.5 rounded border border-border-strong/50 bg-surface px-3 text-xs font-medium text-foreground hover:bg-surface-muted transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            className="inline-flex h-9 w-full sm:w-auto items-center justify-center gap-1.5 rounded border border-border-strong/50 bg-surface px-3 text-xs font-medium text-foreground hover:bg-surface-muted transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           >
             <FileDown className="size-4" aria-hidden="true" />
             <span>Export PDF</span>
           </a>
-          <Button size="sm" onClick={() => window.print()}>
+          <Button
+            size="sm"
+            onClick={() => window.print()}
+            className="col-span-2 sm:col-span-1 w-full sm:w-auto"
+          >
             <Printer className="size-4" aria-hidden="true" />
             <span>Cetak Browser</span>
           </Button>
@@ -125,7 +129,7 @@ export function ShiftReportPrintView({ report }: ShiftReportPrintViewProps) {
 
       {/* PAGE 1 */}
       <article className="print-sheet rounded-lg border border-border bg-surface shadow-sm overflow-hidden">
-        <div className="border-b-2 border-border-strong bg-surface px-6 py-4 flex items-center justify-between gap-4">
+        <div className="border-b-2 border-border-strong bg-surface px-4 py-3 sm:px-6 sm:py-4 flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <BrandMark />
             <div>
@@ -303,7 +307,7 @@ export function ShiftReportPrintView({ report }: ShiftReportPrintViewProps) {
                 />
               </div>
 
-              <div className="grid grid-cols-2 divide-x divide-border bg-surface-muted/40">
+              <div className="grid grid-cols-1 sm:grid-cols-2 print:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x print:divide-y-0 print:divide-x divide-border bg-surface-muted/40">
                 <div className="px-4 py-2.5 flex items-center justify-between">
                   <span className="text-xs font-semibold text-foreground">
                     Total Accept (1.3 + 1.4)%
@@ -348,9 +352,9 @@ export function ShiftReportPrintView({ report }: ShiftReportPrintViewProps) {
 
           <div className="grid grid-cols-1 md:grid-cols-12">
             <div className="md:col-span-7 md:border-r md:border-border divide-y divide-border">
-              <div className="px-4 py-2.5 flex items-center justify-between gap-4 text-sm">
+              <div className="px-4 py-2.5 flex flex-col sm:flex-row sm:items-center sm:justify-between print:flex-row print:items-center print:justify-between gap-2 text-sm">
                 <span className="font-medium text-foreground">2.1 Layer</span>
-                <div className="flex items-center gap-4">
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5">
                   <BoolMark
                     checked={report.layerObservation === "SINGLE_LAYER"}
                     label="2.1.1 Single Layer"
@@ -362,11 +366,11 @@ export function ShiftReportPrintView({ report }: ShiftReportPrintViewProps) {
                 </div>
               </div>
 
-              <div className="px-4 py-2.5 flex items-center justify-between gap-4 text-sm">
+              <div className="px-4 py-2.5 flex flex-col sm:flex-row sm:items-center sm:justify-between print:flex-row print:items-center print:justify-between gap-2 text-sm">
                 <span className="font-medium text-foreground">
                   2.2 Log Condition
                 </span>
-                <div className="flex items-center gap-4">
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5">
                   <BoolMark checked={report.logConditionDry} label="2.2.1 Dry" />
                   <BoolMark
                     checked={report.logConditionFresh}
@@ -493,11 +497,11 @@ export function ShiftReportPrintView({ report }: ShiftReportPrintViewProps) {
 
       {/* PAGE 2 */}
       <article className="print-sheet print-page-break rounded-lg border border-border bg-surface shadow-sm overflow-hidden">
-        <div className="border-b-2 border-border-strong bg-surface px-6 py-4 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
+        <div className="border-b-2 border-border-strong bg-surface px-4 py-3 sm:px-6 sm:py-4 flex flex-wrap items-center justify-between gap-3">
+          <div className="flex items-center gap-3 min-w-0">
             <BrandMark />
-            <div>
-              <p className="text-sm font-bold text-foreground">
+            <div className="min-w-0">
+              <p className="text-sm font-bold text-foreground truncate">
                 SHIFT REPORT &mdash; {report.customer}
               </p>
               <p className="text-xs text-muted-foreground">
@@ -527,41 +531,49 @@ export function ShiftReportPrintView({ report }: ShiftReportPrintViewProps) {
               <div className="bg-background/50 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-foreground">
                 3.1 Chipper Geometry
               </div>
-              <div className="grid grid-cols-12 px-4 py-2.5 text-sm items-center gap-2">
-                <span className="col-span-2 font-mono text-xs text-muted-foreground">
-                  3.1.1
-                </span>
-                <span className="col-span-4 font-medium text-foreground">
-                  T Dimension
-                </span>
-                <span className="col-span-3 font-mono text-foreground tabular-nums">
-                  {report.tDimensionMm !== null
-                    ? `${formatNumber(report.tDimensionMm, 2)} MM`
-                    : "—"}
-                </span>
-                <span className="col-span-3 text-right font-mono text-xs text-muted-foreground tabular-nums">
-                  {report.tDimensionLastSettingDate
-                    ? formatDateDisplay(report.tDimensionLastSettingDate)
-                    : "—"}
-                </span>
+              <div className="flex flex-col gap-1 px-4 py-2.5 text-sm sm:grid sm:grid-cols-12 sm:items-center sm:gap-2 print:grid print:grid-cols-12 print:items-center print:gap-2">
+                <div className="flex items-center gap-2 sm:contents print:contents">
+                  <span className="font-mono text-xs text-muted-foreground sm:col-span-2 print:col-span-2">
+                    3.1.1
+                  </span>
+                  <span className="font-medium text-foreground sm:col-span-4 print:col-span-4">
+                    T Dimension
+                  </span>
+                </div>
+                <div className="flex items-center justify-between gap-2 pl-9 sm:pl-0 sm:contents print:contents">
+                  <span className="font-mono text-foreground tabular-nums sm:col-span-3 print:col-span-3">
+                    {report.tDimensionMm !== null
+                      ? `${formatNumber(report.tDimensionMm, 2)} MM`
+                      : "—"}
+                  </span>
+                  <span className="text-right font-mono text-xs text-muted-foreground tabular-nums sm:col-span-3 print:col-span-3">
+                    {report.tDimensionLastSettingDate
+                      ? formatDateDisplay(report.tDimensionLastSettingDate)
+                      : "—"}
+                  </span>
+                </div>
               </div>
-              <div className="grid grid-cols-12 px-4 py-2.5 text-sm items-center gap-2">
-                <span className="col-span-2 font-mono text-xs text-muted-foreground">
-                  3.2.2
-                </span>
-                <span className="col-span-4 font-medium text-foreground">
-                  Clearance Anvil
-                </span>
-                <span className="col-span-3 font-mono text-foreground tabular-nums">
-                  {report.clearanceAnvilMm !== null
-                    ? `${formatNumber(report.clearanceAnvilMm, 2)} MM`
-                    : "—"}
-                </span>
-                <span className="col-span-3 text-right font-mono text-xs text-muted-foreground tabular-nums">
-                  {report.clearanceAnvilLastSettingDate
-                    ? formatDateDisplay(report.clearanceAnvilLastSettingDate)
-                    : "—"}
-                </span>
+              <div className="flex flex-col gap-1 px-4 py-2.5 text-sm sm:grid sm:grid-cols-12 sm:items-center sm:gap-2 print:grid print:grid-cols-12 print:items-center print:gap-2">
+                <div className="flex items-center gap-2 sm:contents print:contents">
+                  <span className="font-mono text-xs text-muted-foreground sm:col-span-2 print:col-span-2">
+                    3.2.2
+                  </span>
+                  <span className="font-medium text-foreground sm:col-span-4 print:col-span-4">
+                    Clearance Anvil
+                  </span>
+                </div>
+                <div className="flex items-center justify-between gap-2 pl-9 sm:pl-0 sm:contents print:contents">
+                  <span className="font-mono text-foreground tabular-nums sm:col-span-3 print:col-span-3">
+                    {report.clearanceAnvilMm !== null
+                      ? `${formatNumber(report.clearanceAnvilMm, 2)} MM`
+                      : "—"}
+                  </span>
+                  <span className="text-right font-mono text-xs text-muted-foreground tabular-nums sm:col-span-3 print:col-span-3">
+                    {report.clearanceAnvilLastSettingDate
+                      ? formatDateDisplay(report.clearanceAnvilLastSettingDate)
+                      : "—"}
+                  </span>
+                </div>
               </div>
             </div>
 
@@ -720,14 +732,16 @@ export function ShiftReportPrintView({ report }: ShiftReportPrintViewProps) {
                     : "—"}
                 </span>
               </div>
-              <div className="grid grid-cols-12 px-4 py-2.5 text-sm items-start">
-                <span className="col-span-2 font-mono text-xs text-muted-foreground">
-                  4.6
-                </span>
-                <span className="col-span-5 text-foreground">
-                  Percentage Log Diameter
-                </span>
-                <div className="col-span-5 text-right font-mono text-xs space-y-1 tabular-nums text-foreground">
+              <div className="flex flex-col gap-1.5 px-4 py-2.5 text-sm sm:grid sm:grid-cols-12 sm:items-start sm:gap-0 print:grid print:grid-cols-12 print:items-start print:gap-0">
+                <div className="flex items-center gap-2 sm:contents print:contents">
+                  <span className="font-mono text-xs text-muted-foreground sm:col-span-2 print:col-span-2">
+                    4.6
+                  </span>
+                  <span className="text-foreground sm:col-span-5 print:col-span-5">
+                    Percentage Log Diameter
+                  </span>
+                </div>
+                <div className="pl-7 sm:pl-0 sm:col-span-5 sm:text-right print:pl-0 print:col-span-5 print:text-right font-mono text-xs space-y-1 tabular-nums text-foreground">
                   <p>
                     {report.diameterPct1 !== null || report.diameterMm1 !== null
                       ? `${formatNumber(report.diameterPct1, 1)} % / ${formatNumber(report.diameterMm1, 1)} MM`

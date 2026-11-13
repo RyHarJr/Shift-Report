@@ -23,15 +23,16 @@ export function Pagination({
 
   return (
     <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-t border-border px-4 py-3 bg-surface">
-      <p className="text-xs text-muted-foreground tabular-nums">
+      <p className="text-center sm:text-left text-xs text-muted-foreground tabular-nums">
         Menampilkan <span className="font-semibold text-foreground">{start}</span>–
         <span className="font-semibold text-foreground">{end}</span> dari{" "}
         <span className="font-semibold text-foreground">{total}</span> laporan
       </p>
-      <div className="flex items-center gap-2">
+      <div className="flex w-full sm:w-auto items-center justify-between sm:justify-end gap-2">
         <Button
           variant="outline"
           size="sm"
+          className="h-9 sm:h-8"
           disabled={page <= 1}
           onClick={() => onPageChange(page - 1)}
         >
@@ -44,6 +45,7 @@ export function Pagination({
         <Button
           variant="outline"
           size="sm"
+          className="h-9 sm:h-8"
           disabled={page >= totalPages}
           onClick={() => onPageChange(page + 1)}
         >

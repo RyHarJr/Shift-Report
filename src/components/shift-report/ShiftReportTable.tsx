@@ -68,8 +68,129 @@ export function ShiftReportTable({
   }
 
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full border-collapse text-left text-sm">
+    <>
+      {/* Mobile Card View (< md) */}
+      <div className="md:hidden divide-y divide-border bg-surface">
+        {items.map((item) => (
+          <article key={item.id} className="p-4 space-y-3">
+            <div className="flex items-start justify-between gap-2">
+              <div className="min-w-0">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="font-mono text-sm font-semibold text-foreground tabular-nums">
+                    {formatDateDisplay(item.reportDate)}
+                  </span>
+                  <Badge variant="neutral">Shift {item.shift}</Badge>
+                </div>
+                <p className="mt-1 text-sm font-medium text-foreground truncate">
+                  {CHIPPER_LABEL_MAP[item.chipperType]}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  {item.typeOfKnifeSystem} &middot;{" "}
+                  <span className="font-mono tabular-nums">
+                    {formatNumber(item.chipLengthSetUp, 1)} mm
+                  </span>
+                </p>
+              </div>
+              <div className="shrink-0 rounded border border-success/30 bg-success-bg/60 px-2.5 py-1.5 text-right">
+                <div className="text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
+                  Total Accept
+                </div>
+                <div className="font-mono text-sm font-bold text-success tabular-nums">
+                  {formatNumber(item.totalAccept, 2)}%
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground">
+              <span>
+                Inspektor:{" "}
+                <strong className="font-medium text-foreground">
+                  {item.inspectionBy}
+                </strong>
+              </span>
+              <span className="font-mono tabular-nums">
+                Sampling: {item.samplingTime}
+              </span>
+            </div>
+
+            <div className="grid grid-cols-4 gap-1.5 rounded bg-surface-muted/60 px-2 py-2 text-center">
+              <div>
+                <div className="text-[10px] font-medium text-muted-foreground">
+                  1.1 OS
+                </div>
+                <div className="font-mono text-xs font-semibold text-foreground tabular-nums">
+                  {formatNumber(item.oversize, 2)}%
+                </div>
+              </div>
+              <div>
+                <div className="text-[10px] font-medium text-muted-foreground">
+                  1.2 OT
+                </div>
+                <div className="font-mono text-xs font-semibold text-foreground tabular-nums">
+                  {formatNumber(item.overthick, 2)}%
+                </div>
+              </div>
+              <div>
+                <div className="text-[10px] font-medium text-muted-foreground">
+                  P+F
+                </div>
+                <div className="font-mono text-xs font-semibold text-foreground tabular-nums">
+                  {formatNumber(item.pinPlusFines, 2)}%
+                </div>
+              </div>
+              <div>
+                <div className="text-[10px] font-medium text-muted-foreground">
+                  1.8 Moist.
+                </div>
+                <div className="font-mono text-xs font-semibold text-foreground tabular-nums">
+                  {formatNumber(item.moisture, 2)}%
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-4 gap-1.5">
+              <Link
+                href={`/admin/reports/${item.id}`}
+                className="inline-flex h-9 items-center justify-center gap-1 rounded border border-border bg-surface px-2 text-xs font-medium text-foreground hover:bg-surface-muted transition-colors"
+                title="Lihat Detail & Cetak"
+              >
+                <Eye className="size-3.5 shrink-0" aria-hidden="true" />
+                <span>Lihat</span>
+              </Link>
+              <a
+                href={`/api/shift-reports/${item.id}/pdf`}
+                className="inline-flex h-9 items-center justify-center gap-1 rounded border border-border bg-surface px-2 text-xs font-medium text-foreground hover:bg-surface-muted transition-colors"
+                title="Export ke PDF"
+              >
+                <FileDown className="size-3.5 shrink-0" aria-hidden="true" />
+                <span>PDF</span>
+              </a>
+              <Link
+                href={`/admin/reports/${item.id}/edit`}
+                className="inline-flex h-9 items-center justify-center gap-1 rounded border border-border bg-surface px-2 text-xs font-medium text-primary hover:bg-primary/5 transition-colors"
+                title="Edit Laporan"
+              >
+                <Pencil className="size-3.5 shrink-0" aria-hidden="true" />
+                <span>Edit</span>
+              </Link>
+              <button
+                type="button"
+                onClick={() => onDeleteRequest(item)}
+                aria-label={`Hapus laporan ${formatDateDisplay(item.reportDate)} Shift ${item.shift}`}
+                title="Hapus Laporan"
+                className="inline-flex h-9 items-center justify-center gap-1 rounded border border-danger/30 bg-surface px-2 text-xs font-medium text-danger hover:bg-danger-bg transition-colors cursor-pointer"
+              >
+                <Trash2 className="size-3.5 shrink-0" aria-hidden="true" />
+                <span>Hapus</span>
+              </button>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      {/* Desktop Table View (md+) */}
+      <div className="hidden md:block overflow-x-auto">
+        <table className="w-full border-collapse text-left text-sm">
         <thead>
           <tr className="border-b border-border bg-surface-muted/70 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
             <th scope="col" className="px-4 py-3 whitespace-nowrap">
@@ -199,7 +320,8 @@ export function ShiftReportTable({
           ))}
         </tbody>
       </table>
-    </div>
+      </div>
+    </>
   );
 }
 
