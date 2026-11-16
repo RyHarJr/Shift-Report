@@ -1469,7 +1469,7 @@ function drawPage2(
   const d2Mm = fmtOptNum(report.diameterMm2, 1);
   const pairText =
     d1Pct || d1Mm || d2Pct || d2Mm
-      ? `${d1Pct || "—"} %  ${d1Mm || "—"} MM    |    ${d2Pct || "—"} %  ${d2Mm || "—"} MM`
+      ? `${d1Pct || "—"} %  ${d1Mm || "—"} cm    |    ${d2Pct || "—"} %  ${d2Mm || "—"} cm`
       : "";
 
   doc

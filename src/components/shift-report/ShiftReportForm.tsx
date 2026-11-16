@@ -2188,7 +2188,7 @@ export function ShiftReportForm({
                   </div>
                 </div>
 
-                {/* 4.6 Percentage Log Diameter (exact 2 pairs: XX % XX MM XX % XX MM) */}
+                {/* 4.6 Percentage Log Diameter (exact 2 pairs: XX % XX cm XX % XX cm) */}
                 <div className="flex flex-col gap-2 px-3 py-2.5 sm:grid sm:grid-cols-12 sm:items-center sm:gap-0 sm:p-0">
                   <div className="flex items-center gap-2 sm:contents">
                     <div className="shrink-0 font-mono text-xs font-semibold text-muted-foreground sm:text-foreground sm:col-span-2 sm:px-3 sm:py-2.5 sm:border-r sm:border-border-strong/50 sm:text-center">
@@ -2220,10 +2220,10 @@ export function ShiftReportForm({
                       <input
                         id="field-diameterMm1"
                         type="number"
-                        step="1"
+                        step="0.1"
                         min="0"
                         placeholder="XX"
-                        aria-label="Ukuran diameter 1 dalam MM"
+                        aria-label="Ukuran diameter 1 dalam cm"
                         value={form.diameterMm1}
                         onChange={(e) =>
                           setField("diameterMm1", e.target.value)
@@ -2231,7 +2231,7 @@ export function ShiftReportForm({
                         className="h-10 sm:h-9 w-full rounded border border-border bg-surface px-2 sm:px-1.5 text-center text-sm sm:text-xs font-mono tabular-nums focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                       />
                       <span className="shrink-0 text-xs font-mono text-muted-foreground">
-                        MM
+                        cm
                       </span>
                     </div>
 
@@ -2256,10 +2256,10 @@ export function ShiftReportForm({
                       <input
                         id="field-diameterMm2"
                         type="number"
-                        step="1"
+                        step="0.1"
                         min="0"
                         placeholder="XX"
-                        aria-label="Ukuran diameter 2 dalam MM"
+                        aria-label="Ukuran diameter 2 dalam cm"
                         value={form.diameterMm2}
                         onChange={(e) =>
                           setField("diameterMm2", e.target.value)
@@ -2267,7 +2267,7 @@ export function ShiftReportForm({
                         className="h-10 sm:h-9 w-full rounded border border-border bg-surface px-2 sm:px-1.5 text-center text-sm sm:text-xs font-mono tabular-nums focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                       />
                       <span className="shrink-0 text-xs font-mono text-muted-foreground">
-                        MM
+                        cm
                       </span>
                     </div>
                   </div>

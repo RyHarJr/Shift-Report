@@ -734,12 +734,12 @@ export function ShiftReportPrintView({ report }: ShiftReportPrintViewProps) {
                 <div className="pl-7 sm:pl-0 sm:col-span-5 sm:text-right print:pl-0 print:col-span-5 print:text-right font-mono text-xs space-y-1 tabular-nums text-foreground">
                   <p>
                     {report.diameterPct1 !== null || report.diameterMm1 !== null
-                      ? `${formatNumber(report.diameterPct1, 1)} % / ${formatNumber(report.diameterMm1, 1)} MM`
+                      ? `${formatNumber(report.diameterPct1, 1)} % / ${formatNumber(report.diameterMm1, 1)} CM`
                       : "—"}
                   </p>
                   <p>
                     {report.diameterPct2 !== null || report.diameterMm2 !== null
-                      ? `${formatNumber(report.diameterPct2, 1)} % / ${formatNumber(report.diameterMm2, 1)} MM`
+                      ? `${formatNumber(report.diameterPct2, 1)} % / ${formatNumber(report.diameterMm2, 1)} CM`
                       : "—"}
                   </p>
                 </div>
