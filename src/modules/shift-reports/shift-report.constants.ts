@@ -96,12 +96,12 @@ export const CHART_DEFINITIONS = [
   })),
   {
     id: "totalAccept",
-    code: "1.3+1.4",
-    label: "Total Accept (1.3 + 1.4)",
+    code: "Accept",
+    label: "Total Accept",
     shortLabel: "Total Accept",
     unit: "%",
     color: "#15803D",
-    description: "Akumulasi persentase Large Accept + Small Accept.",
+    description: "Persentase Total Accept per inspeksi shift.",
   },
   {
     id: "pinPlusFines",

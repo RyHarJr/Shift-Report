@@ -22,7 +22,7 @@ function parseUtcDateOnly(dateStr: string | null): Date | null {
 function buildPersistencePayload(
   parsed: ShiftReportParsedInput,
 ): Prisma.ShiftReportCreateInput {
-  const totalAccept = roundDecimal(parsed.largeAccept + parsed.smallAccept, 2);
+  const totalAccept = roundDecimal(parsed.totalAccept, 2);
   const pinPlusFines = roundDecimal(parsed.pin + parsed.fines, 2);
 
   return {

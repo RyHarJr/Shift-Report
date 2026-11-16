@@ -55,6 +55,7 @@ interface ShiftReportFormState {
   moisture: string;
   dataSourceChipClassifier: boolean;
   samplingDoneByCostumer: boolean;
+  totalAccept: string;
   chipQualityRemarks: string;
   chipQualityRemarksPhotoUrl: string;
 
@@ -96,10 +97,6 @@ interface ShiftReportFormState {
   partRemarksPhotoUrl: string;
   partRemarks2: string;
   partRemarks2PhotoUrl: string;
-  partRemarks3: string;
-  partRemarks3PhotoUrl: string;
-  partRemarks4: string;
-  partRemarks4PhotoUrl: string;
 
   logYardNumber: string;
   logAgeYears: string;
@@ -112,8 +109,6 @@ interface ShiftReportFormState {
   diameterMm2: string;
   rawMaterialRemarks: string;
   rawMaterialRemarksPhotoUrl: string;
-  rawMaterialRemarks2: string;
-  rawMaterialRemarks2PhotoUrl: string;
 }
 
 function numToStr(val: number | null | undefined): string {
@@ -153,6 +148,7 @@ function createInitialState(
       moisture: "",
       dataSourceChipClassifier: true,
       samplingDoneByCostumer: true,
+      totalAccept: "",
       chipQualityRemarks: "",
       chipQualityRemarksPhotoUrl: "",
 
@@ -194,10 +190,6 @@ function createInitialState(
       partRemarksPhotoUrl: "",
       partRemarks2: "",
       partRemarks2PhotoUrl: "",
-      partRemarks3: "",
-      partRemarks3PhotoUrl: "",
-      partRemarks4: "",
-      partRemarks4PhotoUrl: "",
 
       logYardNumber: "",
       logAgeYears: "",
@@ -210,8 +202,6 @@ function createInitialState(
       diameterMm2: "",
       rawMaterialRemarks: "",
       rawMaterialRemarksPhotoUrl: "",
-      rawMaterialRemarks2: "",
-      rawMaterialRemarks2PhotoUrl: "",
     };
   }
 
@@ -237,6 +227,7 @@ function createInitialState(
     moisture: numToStr(initialData.moisture),
     dataSourceChipClassifier: initialData.dataSourceChipClassifier,
     samplingDoneByCostumer: initialData.samplingDoneByCostumer,
+    totalAccept: numToStr(initialData.totalAccept),
     chipQualityRemarks: initialData.chipQualityRemarks ?? "",
     chipQualityRemarksPhotoUrl: initialData.chipQualityRemarksPhotoUrl ?? "",
 
@@ -279,10 +270,6 @@ function createInitialState(
     partRemarksPhotoUrl: initialData.partRemarksPhotoUrl ?? "",
     partRemarks2: initialData.partRemarks2 ?? "",
     partRemarks2PhotoUrl: initialData.partRemarks2PhotoUrl ?? "",
-    partRemarks3: initialData.partRemarks3 ?? "",
-    partRemarks3PhotoUrl: initialData.partRemarks3PhotoUrl ?? "",
-    partRemarks4: initialData.partRemarks4 ?? "",
-    partRemarks4PhotoUrl: initialData.partRemarks4PhotoUrl ?? "",
 
     logYardNumber: initialData.logYardNumber ?? "",
     logAgeYears: numToStr(initialData.logAgeYears),
@@ -295,8 +282,6 @@ function createInitialState(
     diameterMm2: numToStr(initialData.diameterMm2),
     rawMaterialRemarks: initialData.rawMaterialRemarks ?? "",
     rawMaterialRemarksPhotoUrl: initialData.rawMaterialRemarksPhotoUrl ?? "",
-    rawMaterialRemarks2: initialData.rawMaterialRemarks2 ?? "",
-    rawMaterialRemarks2PhotoUrl: initialData.rawMaterialRemarks2PhotoUrl ?? "",
   };
 }
 
@@ -341,33 +326,6 @@ const PART_REMARK_SLOTS = [
     label: "Remarks 2",
     placeholder: "Catatan Part bagan 2...",
   },
-  {
-    key: "partRemarks3",
-    photoKey: "partRemarks3PhotoUrl",
-    label: "Remarks 3",
-    placeholder: "Catatan Part bagan 3...",
-  },
-  {
-    key: "partRemarks4",
-    photoKey: "partRemarks4PhotoUrl",
-    label: "Remarks 4",
-    placeholder: "Catatan Part bagan 4...",
-  },
-] as const;
-
-const RAW_MATERIAL_REMARK_SLOTS = [
-  {
-    key: "rawMaterialRemarks",
-    photoKey: "rawMaterialRemarksPhotoUrl",
-    label: "Remarks 1",
-    placeholder: "Catatan Raw Material bagan 1...",
-  },
-  {
-    key: "rawMaterialRemarks2",
-    photoKey: "rawMaterialRemarks2PhotoUrl",
-    label: "Remarks 2",
-    placeholder: "Catatan Raw Material bagan 2...",
-  },
 ] as const;
 
 type PhotoSlotKey =
@@ -375,7 +333,7 @@ type PhotoSlotKey =
   | "chipQualityRemarksPhotoUrl"
   | "geometryRemarksPhotoUrl"
   | (typeof PART_REMARK_SLOTS)[number]["photoKey"]
-  | (typeof RAW_MATERIAL_REMARK_SLOTS)[number]["photoKey"];
+  | "rawMaterialRemarksPhotoUrl";
 
 interface RemarksPhotoAttachmentProps {
   photoUrl: string;
@@ -481,7 +439,7 @@ export function ShiftReportForm({
   const [lastSavedId, setLastSavedId] = useState<string | null>(null);
 
   const knifeSystem = getKnifeSystemForChipper(form.chipperType);
-  const totalAccept = roundDecimal(
+  const autoTotalAcceptRef = roundDecimal(
     parseFloatOrZero(form.largeAccept) + parseFloatOrZero(form.smallAccept),
     2,
   );
@@ -620,6 +578,7 @@ export function ShiftReportForm({
       moisture: form.moisture,
       dataSourceChipClassifier: form.dataSourceChipClassifier,
       samplingDoneByCostumer: form.samplingDoneByCostumer,
+      totalAccept: form.totalAccept,
       chipQualityRemarks: form.chipQualityRemarks,
       chipQualityRemarksPhotoUrl: form.chipQualityRemarksPhotoUrl || null,
 
@@ -669,10 +628,10 @@ export function ShiftReportForm({
       partRemarksPhotoUrl: form.partRemarksPhotoUrl || null,
       partRemarks2: form.partRemarks2,
       partRemarks2PhotoUrl: form.partRemarks2PhotoUrl || null,
-      partRemarks3: form.partRemarks3,
-      partRemarks3PhotoUrl: form.partRemarks3PhotoUrl || null,
-      partRemarks4: form.partRemarks4,
-      partRemarks4PhotoUrl: form.partRemarks4PhotoUrl || null,
+      partRemarks3: "",
+      partRemarks3PhotoUrl: null,
+      partRemarks4: "",
+      partRemarks4PhotoUrl: null,
 
       logYardNumber: form.logYardNumber,
       logAgeYears: form.logAgeYears,
@@ -685,8 +644,8 @@ export function ShiftReportForm({
       diameterMm2: form.diameterMm2,
       rawMaterialRemarks: form.rawMaterialRemarks,
       rawMaterialRemarksPhotoUrl: form.rawMaterialRemarksPhotoUrl || null,
-      rawMaterialRemarks2: form.rawMaterialRemarks2,
-      rawMaterialRemarks2PhotoUrl: form.rawMaterialRemarks2PhotoUrl || null,
+      rawMaterialRemarks2: "",
+      rawMaterialRemarks2PhotoUrl: null,
     };
   }
 
@@ -1302,23 +1261,52 @@ export function ShiftReportForm({
                 </div>
               </label>
 
-              {/* Total Accept & P+F live auto-calculated */}
+              {/* Total Accept (Manual Input) & P+F (Auto-calculated) */}
               <div className="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-border-strong/70 bg-primary/5">
-                <div className="flex items-center justify-between px-3 py-3">
-                  <div>
-                    <span className="block text-xs font-bold text-foreground">
-                      Total Accept
-                    </span>
-                    <span className="text-[11px] font-mono text-muted-foreground">
-                      (1.3 + 1.4)
+                <div className="px-3 py-2.5 flex flex-col justify-between gap-1.5">
+                  <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-0.5">
+                    <label
+                      htmlFor="field-totalAccept"
+                      className="text-xs font-bold text-foreground whitespace-nowrap"
+                    >
+                      Total Accept <span className="text-danger">*</span>
+                    </label>
+                    <span className="text-[11px] font-mono text-muted-foreground whitespace-nowrap">
+                      1.3+1.4: {autoTotalAcceptRef.toFixed(2)}%
                     </span>
                   </div>
-                  <span className="font-mono text-base font-bold tabular-nums text-success">
-                    {totalAccept.toFixed(2)} %
-                  </span>
+                  <div className="flex items-center gap-1.5">
+                    <input
+                      id="field-totalAccept"
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      max="100"
+                      placeholder="0.00"
+                      value={form.totalAccept}
+                      onChange={(e) => setField("totalAccept", e.target.value)}
+                      aria-invalid={!!errors.totalAccept}
+                      className={cn(
+                        "h-9 w-full rounded border border-border bg-surface px-2.5 text-right text-sm font-mono font-bold tabular-nums text-success",
+                        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
+                        errors.totalAccept && "border-danger",
+                      )}
+                    />
+                    <span className="text-xs font-mono font-semibold text-muted-foreground w-4 text-right shrink-0">
+                      %
+                    </span>
+                  </div>
+                  {errors.totalAccept ? (
+                    <p
+                      role="alert"
+                      className="text-xs text-danger font-medium"
+                    >
+                      {errors.totalAccept}
+                    </p>
+                  ) : null}
                 </div>
-                <div className="flex items-center justify-between px-3 py-3">
-                  <div>
+                <div className="flex items-center justify-between gap-2 px-3 py-3">
+                  <div className="whitespace-nowrap">
                     <span className="block text-xs font-bold text-foreground">
                       P+F
                     </span>
@@ -1326,7 +1314,7 @@ export function ShiftReportForm({
                       (1.5 + 1.6)
                     </span>
                   </div>
-                  <span className="font-mono text-base font-bold tabular-nums text-primary">
+                  <span className="font-mono text-base font-bold tabular-nums text-primary whitespace-nowrap">
                     {pinPlusFines.toFixed(2)} %
                   </span>
                 </div>
@@ -1979,7 +1967,7 @@ export function ShiftReportForm({
                 <span className="text-xs font-semibold italic text-primary">
                   Remarks (Part)
                 </span>
-                <div className="mt-2 grid grid-cols-1 gap-2.5 flex-1">
+                <div className="mt-2 grid grid-cols-1 gap-3 flex-1">
                   {PART_REMARK_SLOTS.map((slot) => (
                     <div
                       key={slot.key}
@@ -1993,7 +1981,7 @@ export function ShiftReportForm({
                       </label>
                       <textarea
                         id={`field-${slot.key}`}
-                        rows={3}
+                        rows={6}
                         placeholder={slot.placeholder}
                         value={form[slot.key]}
                         onChange={(e) => setField(slot.key, e.target.value)}
@@ -2287,45 +2275,34 @@ export function ShiftReportForm({
               </div>
 
               <div className="lg:col-span-4 p-3 flex flex-col">
-                <div className="grid grid-cols-1 gap-2.5 flex-1">
-                  {RAW_MATERIAL_REMARK_SLOTS.map((slot) => (
-                    <div
-                      key={slot.key}
-                      className="flex flex-col rounded border border-border bg-background/40 p-2"
-                    >
-                      <label
-                        htmlFor={`field-${slot.key}`}
-                        className="mb-1 text-[11px] font-semibold text-muted-foreground"
-                      >
-                        {slot.label}
-                      </label>
-                      <textarea
-                        id={`field-${slot.key}`}
-                        rows={4}
-                        aria-label={`Raw Material ${slot.label}`}
-                        placeholder={slot.placeholder}
-                        value={form[slot.key]}
-                        onChange={(e) => setField(slot.key, e.target.value)}
-                        className="w-full flex-1 rounded border border-border bg-surface p-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                      />
-                      <RemarksPhotoAttachment
-                        photoUrl={form[slot.photoKey]}
-                        label={`Raw Material ${slot.label}`}
-                        isUploading={uploadingPhotoSlot === slot.photoKey}
-                        disabled={uploadingPhotoSlot !== null}
-                        error={photoErrors[slot.photoKey]}
-                        onUpload={(e) =>
-                          handlePhotoUpload(
-                            slot.photoKey,
-                            `Foto Raw Material ${slot.label}`,
-                            e,
-                          )
-                        }
-                        onRemove={() => removePhoto(slot.photoKey)}
-                      />
-                    </div>
-                  ))}
-                </div>
+                <textarea
+                  id="field-rawMaterialRemarks"
+                  rows={6}
+                  aria-label="Raw Material Remarks"
+                  placeholder="Catatan Raw Material..."
+                  value={form.rawMaterialRemarks}
+                  onChange={(e) =>
+                    setField("rawMaterialRemarks", e.target.value)
+                  }
+                  className="w-full flex-1 rounded border border-border bg-surface p-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                />
+                <RemarksPhotoAttachment
+                  photoUrl={form.rawMaterialRemarksPhotoUrl}
+                  label="Remarks Raw Material"
+                  isUploading={
+                    uploadingPhotoSlot === "rawMaterialRemarksPhotoUrl"
+                  }
+                  disabled={uploadingPhotoSlot !== null}
+                  error={photoErrors.rawMaterialRemarksPhotoUrl}
+                  onUpload={(e) =>
+                    handlePhotoUpload(
+                      "rawMaterialRemarksPhotoUrl",
+                      "Foto Remarks Raw Material",
+                      e,
+                    )
+                  }
+                  onRemove={() => removePhoto("rawMaterialRemarksPhotoUrl")}
+                />
               </div>
             </div>
           </div>
@@ -2336,7 +2313,7 @@ export function ShiftReportForm({
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 rounded-lg border border-border bg-surface px-4 py-3 shadow-xs">
         <p className="text-xs text-muted-foreground">
           Field bertanda <span className="text-danger font-semibold">*</span> wajib
-          diisi. Total Accept &amp; P+F dihitung otomatis.
+          diisi. P+F dihitung otomatis.
         </p>
         <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-2.5 sm:gap-3">
           {mode === "edit" ? (

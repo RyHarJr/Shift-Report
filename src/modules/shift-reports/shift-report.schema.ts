@@ -25,6 +25,24 @@ const requiredPercentage = (label: string) =>
     .min(0, `${label} minimal 0%.`)
     .max(100, `${label} maksimal 100%.`);
 
+const requiredManualPercentage = (label: string) =>
+  z.preprocess(
+    (val) => {
+      if (typeof val === "number") return Number.isFinite(val) ? val : undefined;
+      if (typeof val === "string") {
+        const trimmed = val.trim();
+        if (trimmed === "") return undefined;
+        const parsed = Number(trimmed);
+        return Number.isFinite(parsed) ? parsed : trimmed;
+      }
+      return undefined;
+    },
+    z
+      .number({ message: `${label} wajib diisi angka.` })
+      .min(0, `${label} minimal 0%.`)
+      .max(100, `${label} maksimal 100%.`),
+  );
+
 const optionalPercentage = (label: string) =>
   z.preprocess(
     emptyToNull,
@@ -135,6 +153,7 @@ export const shiftReportInputSchema = z.object({
   moisture: requiredPercentage("1.8 Moisture"),
   dataSourceChipClassifier: z.boolean().default(true),
   samplingDoneByCostumer: z.boolean().default(true),
+  totalAccept: requiredManualPercentage("Total Accept"),
   chipQualityRemarks: optionalString(2000),
   chipQualityRemarksPhotoUrl: optionalPhotoUrl,
 

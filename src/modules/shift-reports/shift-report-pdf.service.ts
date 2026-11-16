@@ -29,10 +29,17 @@ interface LoadedPhoto {
   buffer: Buffer;
 }
 
-interface LoadedRemarkPhoto {
-  sectionTitle: string;
-  remarkText: string | null;
-  buffer: Buffer | null;
+interface RemarksPhotoBuffers {
+  chipQuality: Buffer | null;
+  geometry: Buffer | null;
+  part1: Buffer | null;
+  part2: Buffer | null;
+  rawMaterial: Buffer | null;
+}
+
+interface RemarksSlotContent {
+  value: string | null;
+  photoBuffer?: Buffer | null;
 }
 
 async function loadUploadImageBuffer(
@@ -100,64 +107,18 @@ async function loadOperationalPhotos(
   return loaded;
 }
 
-async function loadRemarksPhotos(
+async function loadRemarksPhotoBuffers(
   report: ShiftReportDTO,
-): Promise<LoadedRemarkPhoto[]> {
-  const slots = [
-    {
-      sectionTitle: "1. Chip Quality",
-      remarkText: report.chipQualityRemarks,
-      url: report.chipQualityRemarksPhotoUrl,
-    },
-    {
-      sectionTitle: "3.1 Geometry",
-      remarkText: report.geometryRemarks,
-      url: report.geometryRemarksPhotoUrl,
-    },
-    {
-      sectionTitle: "3.2 Part (1)",
-      remarkText: report.partRemarks,
-      url: report.partRemarksPhotoUrl,
-    },
-    {
-      sectionTitle: "3.2 Part (2)",
-      remarkText: report.partRemarks2,
-      url: report.partRemarks2PhotoUrl,
-    },
-    {
-      sectionTitle: "3.2 Part (3)",
-      remarkText: report.partRemarks3,
-      url: report.partRemarks3PhotoUrl,
-    },
-    {
-      sectionTitle: "3.2 Part (4)",
-      remarkText: report.partRemarks4,
-      url: report.partRemarks4PhotoUrl,
-    },
-    {
-      sectionTitle: "4. Raw Material (1)",
-      remarkText: report.rawMaterialRemarks,
-      url: report.rawMaterialRemarksPhotoUrl,
-    },
-    {
-      sectionTitle: "4. Raw Material (2)",
-      remarkText: report.rawMaterialRemarks2,
-      url: report.rawMaterialRemarks2PhotoUrl,
-    },
-  ];
+): Promise<RemarksPhotoBuffers> {
+  const [chipQuality, geometry, part1, part2, rawMaterial] = await Promise.all([
+    loadUploadImageBuffer(report.chipQualityRemarksPhotoUrl, 720, 540),
+    loadUploadImageBuffer(report.geometryRemarksPhotoUrl, 720, 540),
+    loadUploadImageBuffer(report.partRemarksPhotoUrl, 720, 540),
+    loadUploadImageBuffer(report.partRemarks2PhotoUrl, 720, 540),
+    loadUploadImageBuffer(report.rawMaterialRemarksPhotoUrl, 720, 540),
+  ]);
 
-  const loaded: LoadedRemarkPhoto[] = [];
-
-  for (const slot of slots) {
-    const buffer = await loadUploadImageBuffer(slot.url, 900, 675);
-    loaded.push({
-      sectionTitle: slot.sectionTitle,
-      remarkText: slot.remarkText,
-      buffer,
-    });
-  }
-
-  return loaded;
+  return { chipQuality, geometry, part1, part2, rawMaterial };
 }
 
 const LOGO_PATH = path.join(process.cwd(), "public", "Andritz-Symbol.png");
@@ -278,25 +239,117 @@ function drawRemarksHeader(
   title: string,
   x: number,
   y: number,
-  hasPhoto = false,
-  boxWidth?: number,
 ) {
   doc
     .font("Helvetica-Oblique")
     .fontSize(8.5)
     .fillColor(BLUE)
     .text(title, x, y, { underline: true, lineBreak: false });
+}
 
-  if (hasPhoto && boxWidth) {
+function drawFramedInlinePhoto(
+  doc: PDFKit.PDFDocument,
+  buffer: Buffer,
+  x: number,
+  y: number,
+  w: number,
+  h: number,
+) {
+  drawCellBox(doc, x, y, w, h, 0.45, "#CBD5E1");
+  const inset = 2;
+  if (w <= inset * 2 || h <= inset * 2) return;
+  doc.image(buffer, x + inset, y + inset, {
+    fit: [w - inset * 2, h - inset * 2],
+    align: "center",
+    valign: "center",
+  });
+}
+
+function drawRemarksSlotContent(
+  doc: PDFKit.PDFDocument,
+  x: number,
+  y: number,
+  w: number,
+  h: number,
+  slot: RemarksSlotContent,
+  layout: "horizontal" | "vertical" = "vertical",
+  fontSize = 7.5,
+) {
+  const pad = 5;
+  const innerX = x + pad;
+  const innerY = y + 3;
+  const innerW = w - pad * 2;
+  const innerH = h - 7;
+  if (innerW <= 8 || innerH <= 8) return;
+
+  const text = slot.value?.trim() || null;
+  const photo = slot.photoBuffer ?? null;
+  if (!text && !photo) return;
+
+  if (!photo) {
     doc
       .font("Helvetica")
-      .fontSize(6)
-      .fillColor(MUTED)
-      .text("[Foto terlampir]", x, y + 1.5, {
-        width: boxWidth - 10,
-        align: "right",
-        lineBreak: false,
+      .fontSize(fontSize)
+      .fillColor(DARK)
+      .text(text!, innerX, innerY, {
+        width: innerW,
+        height: innerH,
+        ellipsis: true,
       });
+    return;
+  }
+
+  if (!text) {
+    drawFramedInlinePhoto(doc, photo, innerX, innerY, innerW, innerH);
+    return;
+  }
+
+  if (layout === "horizontal") {
+    const gap = 6;
+    const photoW = Math.min(104, Math.max(76, Math.round(innerW * 0.38)));
+    const textW = innerW - photoW - gap;
+    doc
+      .font("Helvetica")
+      .fontSize(fontSize)
+      .fillColor(DARK)
+      .text(text, innerX, innerY, {
+        width: textW,
+        height: innerH,
+        ellipsis: true,
+      });
+    drawFramedInlinePhoto(
+      doc,
+      photo,
+      innerX + textW + gap,
+      innerY,
+      photoW,
+      innerH,
+    );
+    return;
+  }
+
+  doc.font("Helvetica").fontSize(fontSize);
+  const naturalTextH = Math.ceil(
+    doc.heightOfString(text, { width: innerW }),
+  );
+  const maxTextH = Math.max(18, Math.floor(innerH * 0.42));
+  const textBoxH = Math.min(naturalTextH + 2, maxTextH);
+
+  doc
+    .font("Helvetica")
+    .fontSize(fontSize)
+    .fillColor(DARK)
+    .text(text, innerX, innerY, {
+      width: innerW,
+      height: textBoxH,
+      ellipsis: true,
+    });
+
+  const imgGap = 4;
+  const imgY = innerY + textBoxH + imgGap;
+  const imgH = innerY + innerH - imgY;
+  if (imgH >= 20) {
+    drawFramedInlinePhoto(doc, photo, innerX, imgY, innerW, imgH);
   }
 }
 
@@ -306,7 +359,7 @@ function drawPartitionedRemarks(
   y: number,
   w: number,
   h: number,
-  slots: { value: string | null; hasPhoto?: boolean }[],
+  slots: RemarksSlotContent[],
 ) {
   drawCellBox(doc, x, y, w, h);
   const hdrH = 16;
@@ -319,28 +372,7 @@ function drawPartitionedRemarks(
   slots.forEach((slot, index) => {
     const sy = bodyY + index * slotH;
     drawCellBox(doc, x, sy, w, slotH, 0.45, "#CBD5E1");
-    if (slot.value) {
-      doc
-        .font("Helvetica")
-        .fontSize(7.5)
-        .fillColor(DARK)
-        .text(slot.value, x + 5, sy + 4, {
-          width: w - 10,
-          height: slotH - (slot.hasPhoto ? 14 : 8),
-          ellipsis: true,
-        });
-    }
-    if (slot.hasPhoto) {
-      doc
-        .font("Helvetica")
-        .fontSize(5.5)
-        .fillColor(MUTED)
-        .text("[Foto terlampir]", x + 5, sy + slotH - 9, {
-          width: w - 10,
-          align: "right",
-          lineBreak: false,
-        });
-    }
+    drawRemarksSlotContent(doc, x, sy, w, slotH, slot, "vertical", 7.5);
   });
 }
 
@@ -358,6 +390,7 @@ function drawPage1(
   doc: PDFKit.PDFDocument,
   report: ShiftReportDTO,
   photos: LoadedPhoto[],
+  remarksPhotos: RemarksPhotoBuffers,
   logoBuffer: Buffer | null,
 ) {
   drawPageHeader(doc, logoBuffer);
@@ -765,29 +798,24 @@ function drawPage1(
       { width: pfValW, align: "center" },
     );
 
-  // Row 6-9: Remarks Box
+  // Row 6-9: Remarks Box (text + inline photo if attached)
   const rem1Y = innerY + s1RowH * 5;
   const rem1H = s1RowH * 4;
   drawCellBox(doc, rightPaneX, rem1Y, rightPaneW, rem1H);
-  drawRemarksHeader(
+  drawRemarksHeader(doc, "Remarks", rightPaneX + 5, rem1Y + 5);
+  drawRemarksSlotContent(
     doc,
-    "Remarks",
-    rightPaneX + 5,
-    rem1Y + 5,
-    Boolean(report.chipQualityRemarksPhotoUrl),
+    rightPaneX,
+    rem1Y + 16,
     rightPaneW,
+    rem1H - 16,
+    {
+      value: report.chipQualityRemarks,
+      photoBuffer: remarksPhotos.chipQuality,
+    },
+    "horizontal",
+    8,
   );
-  if (report.chipQualityRemarks) {
-    doc
-      .font("Helvetica")
-      .fontSize(8)
-      .fillColor(DARK)
-      .text(report.chipQualityRemarks, rightPaneX + 5, rem1Y + 18, {
-        width: rightPaneW - 10,
-        height: rem1H - 22,
-        ellipsis: true,
-      });
-  }
 
   // =========================================================
   // SECTION 2: OPERATIONAL CONDITION + 4 PHOTO SLOTS
@@ -1069,20 +1097,20 @@ function drawPage1(
 function drawPage2(
   doc: PDFKit.PDFDocument,
   report: ShiftReportDTO,
+  remarksPhotos: RemarksPhotoBuffers,
   logoBuffer: Buffer | null,
-  totalPages: number,
 ) {
   doc.addPage();
-  drawPageHeader(doc, logoBuffer, `Sida: 2 (totalt ${totalPages})`);
+  drawPageHeader(doc, logoBuffer, "Sida: 2 (totalt 2)");
   drawVerticalTagline(doc);
 
   // =========================================================
   // SECTION 3: CHIPPER CONDITION (Geometry + Part) & REMARKS
   // =========================================================
   const s3Y = 104;
-  const s3LeftW = 342;
+  const s3LeftW = 328;
   const s3RemX = PAGE_LEFT + 3 + s3LeftW + 3;
-  const s3RemW = CONTENT_W - s3LeftW - 9; // 148
+  const s3RemW = CONTENT_W - s3LeftW - 9; // 159
 
   const s3HdrH = 22;
   const subHdrH = 19;
@@ -1127,9 +1155,9 @@ function drawPage2(
   cy += subHdrH;
 
   // 3.1 | Setting | mm | Last Setting Date
-  const geoSetW = 104;
+  const geoSetW = 100;
   const geoMmW = 38;
-  const geoDateW = s3LeftW - s3CodeW - geoSetW - geoMmW; // 166
+  const geoDateW = s3LeftW - s3CodeW - geoSetW - geoMmW; // 156
   drawCellBox(doc, inX, cy, s3CodeW, colHdrH);
   drawCellBox(doc, inX + s3CodeW, cy, geoSetW, colHdrH);
   drawCellBox(doc, inX + s3CodeW + geoSetW, cy, geoMmW, colHdrH);
@@ -1199,28 +1227,23 @@ function drawPage2(
     cy += geoRowH;
   }
 
-  // Geometry Remarks (Right Box)
+  // Geometry Remarks (Right Box + inline photo)
   const geoRemH = cy - geoRemStartY;
   drawCellBox(doc, s3RemX, geoRemStartY, s3RemW, geoRemH);
-  drawRemarksHeader(
+  drawRemarksHeader(doc, "Remarks", s3RemX + 5, geoRemStartY + 5);
+  drawRemarksSlotContent(
     doc,
-    "Remarks",
-    s3RemX + 5,
-    geoRemStartY + 5,
-    Boolean(report.geometryRemarksPhotoUrl),
+    s3RemX,
+    geoRemStartY + 16,
     s3RemW,
+    geoRemH - 16,
+    {
+      value: report.geometryRemarks,
+      photoBuffer: remarksPhotos.geometry,
+    },
+    "vertical",
+    7.5,
   );
-  if (report.geometryRemarks) {
-    doc
-      .font("Helvetica")
-      .fontSize(8)
-      .fillColor(DARK)
-      .text(report.geometryRemarks, s3RemX + 5, geoRemStartY + 18, {
-        width: s3RemW - 10,
-        height: geoRemH - 22,
-        ellipsis: true,
-      });
-  }
 
   cy += 2;
   const partRemStartY = cy;
@@ -1235,8 +1258,8 @@ function drawPage2(
   cy += partHdrH;
 
   // 3.2 | Description | Condition
-  const pDescW = 104;
-  const pCondW = s3LeftW - s3CodeW - pDescW; // 204
+  const pDescW = 98;
+  const pCondW = s3LeftW - s3CodeW - pDescW; // 196
   drawCellBox(doc, inX, cy, s3CodeW, partColH);
   drawCellBox(doc, inX + s3CodeW, cy, pDescW, partColH);
   drawCellBox(doc, inX + s3CodeW + pDescW, cy, pCondW, partColH);
@@ -1257,10 +1280,10 @@ function drawPage2(
   cy += partColH;
 
   // 12 Chipper Part Rows: [X] Good | [X] Worn Out | [X] Broken
-  const pChkW = 20;
-  const pGoodLblW = 36;
-  const pWornLblW = 52;
-  const pBrokLblW = pCondW - pChkW * 3 - pGoodLblW - pWornLblW; // 56
+  const pChkW = 19;
+  const pGoodLblW = 35;
+  const pWornLblW = 50;
+  const pBrokLblW = pCondW - pChkW * 3 - pGoodLblW - pWornLblW; // 54
 
   for (const part of CHIPPER_PARTS) {
     const cond = report[part.key];
@@ -1318,24 +1341,16 @@ function drawPage2(
     cy += partRowH;
   }
 
-  // Part Remarks (Right Box - 4 Bagan)
+  // Part Remarks (Right Box - 2 Bagan + inline photos)
   const partRemH = cy - partRemStartY;
   drawPartitionedRemarks(doc, s3RemX, partRemStartY, s3RemW, partRemH, [
     {
       value: report.partRemarks,
-      hasPhoto: Boolean(report.partRemarksPhotoUrl),
+      photoBuffer: remarksPhotos.part1,
     },
     {
       value: report.partRemarks2,
-      hasPhoto: Boolean(report.partRemarks2PhotoUrl),
-    },
-    {
-      value: report.partRemarks3,
-      hasPhoto: Boolean(report.partRemarks3PhotoUrl),
-    },
-    {
-      value: report.partRemarks4,
-      hasPhoto: Boolean(report.partRemarks4PhotoUrl),
+      photoBuffer: remarksPhotos.part2,
     },
   ]);
 
@@ -1364,10 +1379,10 @@ function drawPage2(
   });
   ry += s4RowH + 2;
 
-  const s4LblW = 132;
-  const s4RightW = s3LeftW - s3CodeW - s4LblW; // 176
-  const s4ValW = 104;
-  const s4UnitW = s4RightW - s4ValW; // 72
+  const s4LblW = 126;
+  const s4RightW = s3LeftW - s3CodeW - s4LblW; // 168
+  const s4ValW = 100;
+  const s4UnitW = s4RightW - s4ValW; // 68
 
   // 4.1 Log Yard Number (full right value)
   drawCellBox(doc, inX, ry, s3CodeW, s4RowH);
@@ -1467,151 +1482,41 @@ function drawPage2(
   });
   doc
     .font("Helvetica-Bold")
-    .fontSize(7.5)
+    .fontSize(7)
     .text(pairText, inX + s3CodeW + s4LblW + 4, ry + 7, {
       width: s4RightW - 8,
       align: "center",
     });
   ry += s4RowH;
 
-  // Section 4 Remarks Box (2 Bagan)
+  // Section 4 Remarks Box (1 Bagan tunggal + inline photo)
   const s4RemH = ry - s4StartY;
-  drawPartitionedRemarks(doc, s3RemX, s4StartY, s3RemW, s4RemH, [
+  drawCellBox(doc, s3RemX, s4StartY, s3RemW, s4RemH);
+  drawRemarksHeader(doc, "Remarks", s3RemX + 5, s4StartY + 5);
+  drawRemarksSlotContent(
+    doc,
+    s3RemX,
+    s4StartY + 16,
+    s3RemW,
+    s4RemH - 16,
     {
       value: report.rawMaterialRemarks,
-      hasPhoto: Boolean(report.rawMaterialRemarksPhotoUrl),
+      photoBuffer: remarksPhotos.rawMaterial,
     },
-    {
-      value: report.rawMaterialRemarks2,
-      hasPhoto: Boolean(report.rawMaterialRemarks2PhotoUrl),
-    },
-  ]);
+    "vertical",
+    7.5,
+  );
 }
 
-function drawRemarksPhotoPage(
-  doc: PDFKit.PDFDocument,
-  remarkPhotos: LoadedRemarkPhoto[],
-  logoBuffer: Buffer | null,
-  totalPages: number,
-) {
-  doc.addPage();
-  drawPageHeader(doc, logoBuffer, `Sida: 3 (totalt ${totalPages})`);
-  drawVerticalTagline(doc);
-
-  const boxY = 104;
-  const boxH = 660;
-  drawDoubleFrame(doc, PAGE_LEFT, boxY, CONTENT_W, boxH);
-
-  const inX = PAGE_LEFT + 3;
-  const hdrH = 22;
-  drawCellBox(doc, inX, boxY + 3, CONTENT_W - 6, hdrH);
-  doc
-    .font("Helvetica-Bold")
-    .fontSize(8.5)
-    .fillColor(DARK)
-    .text("Lampiran Foto Remarks", inX, boxY + 9, {
-      width: CONTENT_W - 6,
-      align: "center",
-    });
-
-  const gridX = PAGE_LEFT + 9;
-  const gridY = boxY + 3 + hdrH + 6;
-  const availW = CONTENT_W - 18;
-  const availH = boxH - 37;
-  const gapX = 10;
-  const gapY = 8;
-  const cols = 2;
-  const rows = 4;
-  const cardW = (availW - gapX) / cols;
-  const cardH = (availH - gapY * (rows - 1)) / rows;
-
-  remarkPhotos.slice(0, cols * rows).forEach((item, idx) => {
-    const col = idx % cols;
-    const row = Math.floor(idx / cols);
-    const cx = gridX + col * (cardW + gapX);
-    const cy = gridY + row * (cardH + gapY);
-
-    drawCellBox(doc, cx, cy, cardW, cardH, 0.65, BORDER);
-
-    const titleH = 17;
-    drawCellBox(doc, cx, cy, cardW, titleH, 0.5, BORDER);
-    doc
-      .font("Helvetica-Bold")
-      .fontSize(7.5)
-      .fillColor(DARK)
-      .text(item.sectionTitle, cx + 6, cy + 5, {
-        width: cardW - 12,
-        lineBreak: false,
-        ellipsis: true,
-      });
-
-    let textAreaH = 0;
-    if (item.remarkText) {
-      textAreaH = 22;
-      doc
-        .font("Helvetica")
-        .fontSize(6.5)
-        .fillColor(DARK)
-        .text(item.remarkText, cx + 6, cy + titleH + 3, {
-          width: cardW - 12,
-          height: 17,
-          ellipsis: true,
-        });
-      doc
-        .save()
-        .lineWidth(0.4)
-        .strokeColor("#CBD5E1")
-        .moveTo(cx, cy + titleH + textAreaH)
-        .lineTo(cx + cardW, cy + titleH + textAreaH)
-        .stroke()
-        .restore();
-    }
-
-    const imgY = cy + titleH + textAreaH + 5;
-    const imgW = cardW - 12;
-    const imgH = cardH - titleH - textAreaH - 10;
-
-    if (item.buffer) {
-      doc.image(item.buffer, cx + 6, imgY, {
-        fit: [imgW, imgH],
-        align: "center",
-        valign: "center",
-      });
-    } else {
-      doc
-        .save()
-        .lineWidth(0.5)
-        .dash(3, { space: 3 })
-        .strokeColor("#CBD5E1")
-        .rect(cx + 8, imgY + 2, imgW - 4, imgH - 4)
-        .stroke()
-        .undash()
-        .restore();
-
-      doc
-        .font("Helvetica")
-        .fontSize(7)
-        .fillColor(MUTED)
-        .text("Tidak ada foto", cx + 6, imgY + imgH / 2 - 4, {
-          width: imgW,
-          align: "center",
-        });
-    }
-  });
-}
-
-/** Generates a 2-page A4 Shift Report PDF (+ Page 3 attachment grid when remarks photos exist). */
+/** Generates a consistent 2-page A4 Shift Report PDF with remarks photos embedded in place. */
 export async function generateShiftReportPdf(
   report: ShiftReportDTO,
 ): Promise<Buffer> {
-  const [photos, remarkPhotos, logoBuffer] = await Promise.all([
+  const [photos, remarksPhotos, logoBuffer] = await Promise.all([
     loadOperationalPhotos(report),
-    loadRemarksPhotos(report),
+    loadRemarksPhotoBuffers(report),
     loadCompanyLogo(),
   ]);
-
-  const hasRemarksPhotos = remarkPhotos.some((item) => item.buffer !== null);
-  const totalPages = hasRemarksPhotos ? 3 : 2;
 
   return new Promise<Buffer>((resolve, reject) => {
     const doc = new PDFDocument({
@@ -1629,11 +1534,8 @@ export async function generateShiftReportPdf(
     doc.on("end", () => resolve(Buffer.concat(chunks)));
     doc.on("error", reject);
 
-    drawPage1(doc, report, photos, logoBuffer);
-    drawPage2(doc, report, logoBuffer, totalPages);
-    if (hasRemarksPhotos) {
-      drawRemarksPhotoPage(doc, remarkPhotos, logoBuffer, totalPages);
-    }
+    drawPage1(doc, report, photos, remarksPhotos, logoBuffer);
+    drawPage2(doc, report, remarksPhotos, logoBuffer);
 
     doc.end();
   });
