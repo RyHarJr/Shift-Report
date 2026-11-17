@@ -70,6 +70,7 @@ export interface ShiftReportDTO {
   partBedKnife: PartConditionValue | null;
   partSideWearPlateInner: PartConditionValue | null;
   partSideWearPlateOuter: PartConditionValue | null;
+  partFeedSpot: PartConditionValue | null;
   partRemarks: string | null;
   partRemarksPhotoUrl: string | null;
   partRemarks2: string | null;

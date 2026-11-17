@@ -127,6 +127,7 @@ model ShiftReport {
   partBedKnife           PartCondition?
   partSideWearPlateInner PartCondition?
   partSideWearPlateOuter PartCondition?
+  partFeedSpot           PartCondition?
   partRemarks            String?        @db.Text
   partRemarksPhotoUrl    String?        @db.VarChar(500)
   partRemarks2           String?        @db.Text

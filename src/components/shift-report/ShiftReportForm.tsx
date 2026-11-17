@@ -97,6 +97,7 @@ interface ShiftReportFormState {
   partBedKnife: PartConditionValue | "";
   partSideWearPlateInner: PartConditionValue | "";
   partSideWearPlateOuter: PartConditionValue | "";
+  partFeedSpot: PartConditionValue | "";
   partRemarks: string;
   partRemarksPhotoUrl: string;
   partRemarks2: string;
@@ -190,6 +191,7 @@ function createInitialState(
       partBedKnife: "",
       partSideWearPlateInner: "",
       partSideWearPlateOuter: "",
+      partFeedSpot: "",
       partRemarks: "",
       partRemarksPhotoUrl: "",
       partRemarks2: "",
@@ -270,6 +272,7 @@ function createInitialState(
     partBedKnife: initialData.partBedKnife ?? "",
     partSideWearPlateInner: initialData.partSideWearPlateInner ?? "",
     partSideWearPlateOuter: initialData.partSideWearPlateOuter ?? "",
+    partFeedSpot: initialData.partFeedSpot ?? "",
     partRemarks: initialData.partRemarks ?? "",
     partRemarksPhotoUrl: initialData.partRemarksPhotoUrl ?? "",
     partRemarks2: initialData.partRemarks2 ?? "",
@@ -489,6 +492,7 @@ export function ShiftReportForm({
       partBedKnife: "GOOD",
       partSideWearPlateInner: "GOOD",
       partSideWearPlateOuter: "GOOD",
+      partFeedSpot: "GOOD",
     }));
   }
 
@@ -638,6 +642,7 @@ export function ShiftReportForm({
       partBedKnife: form.partBedKnife || null,
       partSideWearPlateInner: form.partSideWearPlateInner || null,
       partSideWearPlateOuter: form.partSideWearPlateOuter || null,
+      partFeedSpot: form.partFeedSpot || null,
       partRemarks: form.partRemarks,
       partRemarksPhotoUrl: form.partRemarksPhotoUrl || null,
       partRemarks2: form.partRemarks2,
@@ -1153,14 +1158,14 @@ export function ShiftReportForm({
                 </div>
               </div>
 
-              <div className="divide-y divide-border-strong/50 flex-1">
+              <div className="divide-y divide-border-strong/50 flex-1 flex flex-col">
                 {CHIP_QUALITY_METRICS.map((metric) => {
                   const fieldKey = metric.key as keyof ShiftReportFormState;
                   const errMsg = errors[fieldKey];
                   return (
                     <div
                       key={metric.key}
-                      className="grid grid-cols-12 items-center"
+                      className="grid grid-cols-12 items-center lg:flex-1"
                     >
                       <div className="col-span-2 px-3 py-2 border-r border-border-strong/50 text-center font-mono text-xs font-semibold text-foreground self-stretch flex items-center justify-center bg-surface-muted/30">
                         {metric.code}
@@ -1172,7 +1177,7 @@ export function ShiftReportForm({
                         {metric.label}
                         <span className="ml-1 text-danger">*</span>
                       </label>
-                      <div className="col-span-5 px-3 py-1.5">
+                      <div className="col-span-5 px-3 py-1.5 self-stretch flex flex-col justify-center">
                         <div className="flex items-center gap-1.5">
                           <input
                             id={`field-${metric.key}`}
@@ -1386,7 +1391,7 @@ export function ShiftReportForm({
 
             <div className="grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-border-strong/70">
               {/* Left: 2.1 Layer & 2.2 Log Condition */}
-              <div className="lg:col-span-6 divide-y divide-border-strong/50">
+              <div className="lg:col-span-6 flex flex-col divide-y divide-border-strong/50">
                 {/* 2.1 Layer */}
                 <div className="grid grid-cols-12 items-center bg-surface-muted/40">
                   <div className="col-span-2 px-3 py-2 border-r border-border-strong/50 text-center font-mono text-xs font-semibold">
@@ -1413,12 +1418,12 @@ export function ShiftReportForm({
                   return (
                     <label
                       key={layer.value}
-                      className="grid grid-cols-12 items-center cursor-pointer hover:bg-surface-muted/30 transition-colors"
+                      className="grid grid-cols-12 items-center lg:flex-1 cursor-pointer hover:bg-surface-muted/30 transition-colors"
                     >
-                      <div className="col-span-2 px-3 py-2.5 border-r border-border-strong/50 text-center font-mono text-xs font-semibold">
+                      <div className="col-span-2 px-3 py-2.5 border-r border-border-strong/50 text-center font-mono text-xs font-semibold self-stretch flex items-center justify-center">
                         {layer.code}
                       </div>
-                      <div className="col-span-2 px-3 py-2.5 border-r border-border-strong/50 flex justify-center">
+                      <div className="col-span-2 px-3 py-2.5 border-r border-border-strong/50 self-stretch flex items-center justify-center">
                         <input
                           type="radio"
                           name="layerObservation"
@@ -1429,7 +1434,7 @@ export function ShiftReportForm({
                           className="size-4 accent-primary cursor-pointer"
                         />
                       </div>
-                      <div className="col-span-8 px-3 py-2.5 text-sm font-medium">
+                      <div className="col-span-8 px-3 py-2.5 text-sm font-medium self-stretch flex items-center">
                         {layer.label}
                       </div>
                     </label>
@@ -1447,11 +1452,11 @@ export function ShiftReportForm({
                 </div>
 
                 {/* 2.2.1 Dry */}
-                <label className="grid grid-cols-12 items-center cursor-pointer hover:bg-surface-muted/30 transition-colors">
-                  <div className="col-span-2 px-3 py-2.5 border-r border-border-strong/50 text-center font-mono text-xs font-semibold">
+                <label className="grid grid-cols-12 items-center lg:flex-1 cursor-pointer hover:bg-surface-muted/30 transition-colors">
+                  <div className="col-span-2 px-3 py-2.5 border-r border-border-strong/50 text-center font-mono text-xs font-semibold self-stretch flex items-center justify-center">
                     2.2.1
                   </div>
-                  <div className="col-span-2 px-3 py-2.5 border-r border-border-strong/50 flex justify-center">
+                  <div className="col-span-2 px-3 py-2.5 border-r border-border-strong/50 self-stretch flex items-center justify-center">
                     <input
                       type="checkbox"
                       checked={form.logConditionDry}
@@ -1461,17 +1466,17 @@ export function ShiftReportForm({
                       className="size-4 accent-primary rounded cursor-pointer"
                     />
                   </div>
-                  <div className="col-span-8 px-3 py-2.5 text-sm font-medium">
+                  <div className="col-span-8 px-3 py-2.5 text-sm font-medium self-stretch flex items-center">
                     Dry
                   </div>
                 </label>
 
                 {/* 2.2.2 Fresh */}
-                <label className="grid grid-cols-12 items-center cursor-pointer hover:bg-surface-muted/30 transition-colors">
-                  <div className="col-span-2 px-3 py-2.5 border-r border-border-strong/50 text-center font-mono text-xs font-semibold">
+                <label className="grid grid-cols-12 items-center lg:flex-1 cursor-pointer hover:bg-surface-muted/30 transition-colors">
+                  <div className="col-span-2 px-3 py-2.5 border-r border-border-strong/50 text-center font-mono text-xs font-semibold self-stretch flex items-center justify-center">
                     2.2.2
                   </div>
-                  <div className="col-span-2 px-3 py-2.5 border-r border-border-strong/50 flex justify-center">
+                  <div className="col-span-2 px-3 py-2.5 border-r border-border-strong/50 self-stretch flex items-center justify-center">
                     <input
                       type="checkbox"
                       checked={form.logConditionFresh}
@@ -1481,7 +1486,7 @@ export function ShiftReportForm({
                       className="size-4 accent-primary rounded cursor-pointer"
                     />
                   </div>
-                  <div className="col-span-8 px-3 py-2.5 text-sm font-medium">
+                  <div className="col-span-8 px-3 py-2.5 text-sm font-medium self-stretch flex items-center">
                     Fresh
                   </div>
                 </label>
@@ -1502,18 +1507,18 @@ export function ShiftReportForm({
                   return (
                     <div
                       key={item.key}
-                      className="flex flex-col gap-2 px-3 py-2.5 sm:grid sm:grid-cols-12 sm:items-center sm:gap-0 sm:p-0"
+                      className="flex flex-col gap-2 px-3 py-2.5 sm:grid sm:grid-cols-12 sm:items-center sm:gap-0 sm:p-0 lg:flex-1"
                     >
                       <div className="flex items-center gap-2 sm:contents">
-                        <div className="shrink-0 font-mono text-xs font-semibold text-muted-foreground sm:text-foreground sm:col-span-2 sm:px-3 sm:py-2.5 sm:border-r sm:border-border-strong/50 sm:text-center">
+                        <div className="shrink-0 font-mono text-xs font-semibold text-muted-foreground sm:text-foreground sm:col-span-2 sm:px-3 sm:py-2.5 sm:border-r sm:border-border-strong/50 sm:text-center sm:self-stretch sm:flex sm:items-center sm:justify-center">
                           {item.code}
                         </div>
-                        <div className="text-sm font-medium sm:col-span-4 sm:px-3 sm:py-2.5 sm:border-r sm:border-border-strong/50">
+                        <div className="text-sm font-medium sm:col-span-4 sm:px-3 sm:py-2.5 sm:border-r sm:border-border-strong/50 sm:self-stretch sm:flex sm:items-center">
                           {item.label}
                         </div>
                       </div>
                       <div className="grid grid-cols-2 gap-2 sm:contents">
-                        <div className="sm:col-span-3 sm:px-2 sm:py-2 sm:border-r sm:border-border-strong/50">
+                        <div className="sm:col-span-3 sm:px-2 sm:py-2 sm:border-r sm:border-border-strong/50 sm:self-stretch sm:flex sm:items-center sm:justify-center">
                           <label className="flex min-h-10 sm:min-h-0 items-center justify-center gap-2 rounded border border-border sm:border-transparent bg-surface-muted/30 sm:bg-transparent px-3 py-1.5 sm:p-0 cursor-pointer text-sm">
                             <input
                               type="radio"
@@ -1525,7 +1530,7 @@ export function ShiftReportForm({
                             <span>Yes</span>
                           </label>
                         </div>
-                        <div className="sm:col-span-3 sm:px-2 sm:py-2">
+                        <div className="sm:col-span-3 sm:px-2 sm:py-2 sm:self-stretch sm:flex sm:items-center sm:justify-center">
                           <label className="flex min-h-10 sm:min-h-0 items-center justify-center gap-2 rounded border border-border sm:border-transparent bg-surface-muted/30 sm:bg-transparent px-3 py-1.5 sm:p-0 cursor-pointer text-sm">
                             <input
                               type="radio"
@@ -1723,7 +1728,7 @@ export function ShiftReportForm({
 
             {/* 3.1 Geometry */}
             <div className="grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-border-strong/70">
-              <div className="lg:col-span-8 divide-y divide-border-strong/50">
+              <div className="lg:col-span-8 flex flex-col divide-y divide-border-strong/50">
                 <div className="px-3 py-2 text-center text-xs font-semibold bg-surface-muted/40">
                   Geometry
                 </div>
@@ -1743,20 +1748,20 @@ export function ShiftReportForm({
                 </div>
 
                 {/* 3.1.1 T Dimension */}
-                <div className="flex flex-col gap-2 px-3 py-2.5 sm:grid sm:grid-cols-12 sm:items-center sm:gap-0 sm:p-0">
+                <div className="flex flex-col gap-2 px-3 py-2.5 sm:grid sm:grid-cols-12 sm:items-center sm:gap-0 sm:p-0 lg:flex-1">
                   <div className="flex items-center gap-2 sm:contents">
-                    <div className="shrink-0 font-mono text-xs font-semibold text-muted-foreground sm:text-foreground sm:col-span-2 sm:px-3 sm:py-2.5 sm:border-r sm:border-border-strong/50 sm:text-center">
+                    <div className="shrink-0 font-mono text-xs font-semibold text-muted-foreground sm:text-foreground sm:col-span-2 sm:px-3 sm:py-2.5 sm:border-r sm:border-border-strong/50 sm:text-center sm:self-stretch sm:flex sm:items-center sm:justify-center">
                       3.1.1
                     </div>
                     <label
                       htmlFor="field-tDimensionMm"
-                      className="text-sm font-medium sm:col-span-4 sm:px-3 sm:py-2.5 sm:border-r sm:border-border-strong/50"
+                      className="text-sm font-medium sm:col-span-4 sm:px-3 sm:py-2.5 sm:border-r sm:border-border-strong/50 sm:self-stretch sm:flex sm:items-center"
                     >
                       T Dimension
                     </label>
                   </div>
                   <div className="grid grid-cols-12 gap-2 items-end sm:contents">
-                    <div className="col-span-5 sm:col-span-2 sm:px-2 sm:py-1.5 sm:border-r sm:border-border-strong/50">
+                    <div className="col-span-5 sm:col-span-2 sm:px-2 sm:py-1.5 sm:border-r sm:border-border-strong/50 sm:self-stretch sm:flex sm:items-center">
                       <span className="mb-1 block text-[11px] font-medium text-muted-foreground sm:hidden">
                         Ukuran (mm)
                       </span>
@@ -1771,7 +1776,7 @@ export function ShiftReportForm({
                         className="h-10 sm:h-9 w-full rounded border border-border bg-surface px-2.5 sm:px-2 text-right text-sm font-mono tabular-nums focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                       />
                     </div>
-                    <div className="col-span-7 sm:col-span-4 sm:px-2 sm:py-1.5">
+                    <div className="col-span-7 sm:col-span-4 sm:px-2 sm:py-1.5 sm:self-stretch sm:flex sm:items-center">
                       <span className="mb-1 block text-[11px] font-medium text-muted-foreground sm:hidden">
                         Last Setting Date
                       </span>
@@ -1790,20 +1795,20 @@ export function ShiftReportForm({
                 </div>
 
                 {/* 3.2.2 Clearance Anvil (preserving exact PDF numbering 3.2.2) */}
-                <div className="flex flex-col gap-2 px-3 py-2.5 sm:grid sm:grid-cols-12 sm:items-center sm:gap-0 sm:p-0">
+                <div className="flex flex-col gap-2 px-3 py-2.5 sm:grid sm:grid-cols-12 sm:items-center sm:gap-0 sm:p-0 lg:flex-1">
                   <div className="flex items-center gap-2 sm:contents">
-                    <div className="shrink-0 font-mono text-xs font-semibold text-muted-foreground sm:text-foreground sm:col-span-2 sm:px-3 sm:py-2.5 sm:border-r sm:border-border-strong/50 sm:text-center">
+                    <div className="shrink-0 font-mono text-xs font-semibold text-muted-foreground sm:text-foreground sm:col-span-2 sm:px-3 sm:py-2.5 sm:border-r sm:border-border-strong/50 sm:text-center sm:self-stretch sm:flex sm:items-center sm:justify-center">
                       3.2.2
                     </div>
                     <label
                       htmlFor="field-clearanceAnvilMm"
-                      className="text-sm font-medium sm:col-span-4 sm:px-3 sm:py-2.5 sm:border-r sm:border-border-strong/50"
+                      className="text-sm font-medium sm:col-span-4 sm:px-3 sm:py-2.5 sm:border-r sm:border-border-strong/50 sm:self-stretch sm:flex sm:items-center"
                     >
                       Clearance Anvil
                     </label>
                   </div>
                   <div className="grid grid-cols-12 gap-2 items-end sm:contents">
-                    <div className="col-span-5 sm:col-span-2 sm:px-2 sm:py-1.5 sm:border-r sm:border-border-strong/50">
+                    <div className="col-span-5 sm:col-span-2 sm:px-2 sm:py-1.5 sm:border-r sm:border-border-strong/50 sm:self-stretch sm:flex sm:items-center">
                       <span className="mb-1 block text-[11px] font-medium text-muted-foreground sm:hidden">
                         Ukuran (mm)
                       </span>
@@ -1820,7 +1825,7 @@ export function ShiftReportForm({
                         className="h-10 sm:h-9 w-full rounded border border-border bg-surface px-2.5 sm:px-2 text-right text-sm font-mono tabular-nums focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                       />
                     </div>
-                    <div className="col-span-7 sm:col-span-4 sm:px-2 sm:py-1.5">
+                    <div className="col-span-7 sm:col-span-4 sm:px-2 sm:py-1.5 sm:self-stretch sm:flex sm:items-center">
                       <span className="mb-1 block text-[11px] font-medium text-muted-foreground sm:hidden">
                         Last Setting Date
                       </span>
@@ -1872,7 +1877,7 @@ export function ShiftReportForm({
 
             {/* 3.2 Part */}
             <div className="grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-border-strong/70">
-              <div className="lg:col-span-8 divide-y divide-border-strong/50">
+              <div className="lg:col-span-8 flex flex-col divide-y divide-border-strong/50">
                 <div className="px-3 py-2 flex flex-wrap items-center justify-between gap-2 bg-surface-muted/40">
                   <span className="text-xs font-semibold">Part (3.2)</span>
                   <button
@@ -1903,7 +1908,7 @@ export function ShiftReportForm({
                   return (
                     <div
                       key={part.key}
-                      className="flex flex-col gap-2 px-3 py-2.5 sm:grid sm:grid-cols-12 sm:items-center sm:gap-0 sm:p-0"
+                      className="flex flex-col gap-2 px-3 py-2.5 sm:grid sm:grid-cols-12 sm:items-center sm:gap-0 sm:p-0 lg:flex-1"
                     >
                       <div className="flex items-center gap-2 sm:contents">
                         <div className="shrink-0 font-mono text-xs font-semibold text-muted-foreground sm:text-foreground sm:col-span-2 sm:px-2 sm:py-2 sm:border-r sm:border-border-strong/50 sm:text-center sm:self-stretch sm:flex sm:items-center sm:justify-center">
@@ -1995,7 +2000,7 @@ export function ShiftReportForm({
                       </label>
                       <textarea
                         id={`field-${slot.key}`}
-                        rows={6}
+                        rows={5}
                         placeholder={slot.placeholder}
                         value={form[slot.key]}
                         onChange={(e) => setField(slot.key, e.target.value)}
@@ -2040,21 +2045,21 @@ export function ShiftReportForm({
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-border-strong/70">
-              <div className="lg:col-span-8 divide-y divide-border-strong/50">
+              <div className="lg:col-span-8 flex flex-col divide-y divide-border-strong/50">
                 {/* 4.1 Log Yard Number */}
-                <div className="flex flex-col gap-1.5 px-3 py-2.5 sm:grid sm:grid-cols-12 sm:items-center sm:gap-0 sm:p-0">
+                <div className="flex flex-col gap-1.5 px-3 py-2.5 sm:grid sm:grid-cols-12 sm:items-center sm:gap-0 sm:p-0 lg:flex-1">
                   <div className="flex items-center gap-2 sm:contents">
-                    <div className="shrink-0 font-mono text-xs font-semibold text-muted-foreground sm:text-foreground sm:col-span-2 sm:px-3 sm:py-2.5 sm:border-r sm:border-border-strong/50 sm:text-center">
+                    <div className="shrink-0 font-mono text-xs font-semibold text-muted-foreground sm:text-foreground sm:col-span-2 sm:px-3 sm:py-2.5 sm:border-r sm:border-border-strong/50 sm:text-center sm:self-stretch sm:flex sm:items-center sm:justify-center">
                       4.1
                     </div>
                     <label
                       htmlFor="field-logYardNumber"
-                      className="text-sm font-medium sm:col-span-5 sm:px-3 sm:py-2.5 sm:border-r sm:border-border-strong/50"
+                      className="text-sm font-medium sm:col-span-5 sm:px-3 sm:py-2.5 sm:border-r sm:border-border-strong/50 sm:self-stretch sm:flex sm:items-center"
                     >
                       Log Yard Number
                     </label>
                   </div>
-                  <div className="sm:col-span-5 sm:px-3 sm:py-1.5">
+                  <div className="sm:col-span-5 sm:px-3 sm:py-1.5 sm:self-stretch sm:flex sm:items-center">
                     <input
                       id="field-logYardNumber"
                       type="text"
@@ -2068,20 +2073,20 @@ export function ShiftReportForm({
                 </div>
 
                 {/* 4.2 Log Age */}
-                <div className="flex flex-col gap-1.5 px-3 py-2.5 sm:grid sm:grid-cols-12 sm:items-center sm:gap-0 sm:p-0">
+                <div className="flex flex-col gap-1.5 px-3 py-2.5 sm:grid sm:grid-cols-12 sm:items-center sm:gap-0 sm:p-0 lg:flex-1">
                   <div className="flex items-center gap-2 sm:contents">
-                    <div className="shrink-0 font-mono text-xs font-semibold text-muted-foreground sm:text-foreground sm:col-span-2 sm:px-3 sm:py-2.5 sm:border-r sm:border-border-strong/50 sm:text-center">
+                    <div className="shrink-0 font-mono text-xs font-semibold text-muted-foreground sm:text-foreground sm:col-span-2 sm:px-3 sm:py-2.5 sm:border-r sm:border-border-strong/50 sm:text-center sm:self-stretch sm:flex sm:items-center sm:justify-center">
                       4.2
                     </div>
                     <label
                       htmlFor="field-logAgeYears"
-                      className="text-sm font-medium sm:col-span-5 sm:px-3 sm:py-2.5 sm:border-r sm:border-border-strong/50"
+                      className="text-sm font-medium sm:col-span-5 sm:px-3 sm:py-2.5 sm:border-r sm:border-border-strong/50 sm:self-stretch sm:flex sm:items-center"
                     >
                       Log Age
                     </label>
                   </div>
                   <div className="flex items-center gap-2 sm:contents">
-                    <div className="flex-1 sm:col-span-3 sm:px-3 sm:py-1.5 sm:border-r sm:border-border-strong/50">
+                    <div className="flex-1 sm:col-span-3 sm:px-3 sm:py-1.5 sm:border-r sm:border-border-strong/50 sm:self-stretch sm:flex sm:items-center">
                       <input
                         id="field-logAgeYears"
                         type="number"
@@ -2093,27 +2098,27 @@ export function ShiftReportForm({
                         className="h-10 sm:h-9 w-full rounded border border-border bg-surface px-2.5 text-center text-sm font-mono tabular-nums focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                       />
                     </div>
-                    <div className="shrink-0 w-16 sm:w-auto sm:col-span-2 px-2 py-2.5 text-center text-xs font-medium text-muted-foreground">
+                    <div className="shrink-0 w-16 sm:w-auto sm:col-span-2 px-2 py-2.5 text-center text-xs font-medium text-muted-foreground sm:self-stretch sm:flex sm:items-center sm:justify-center">
                       Years
                     </div>
                   </div>
                 </div>
 
                 {/* 4.3 Log Aging In Storage */}
-                <div className="flex flex-col gap-1.5 px-3 py-2.5 sm:grid sm:grid-cols-12 sm:items-center sm:gap-0 sm:p-0">
+                <div className="flex flex-col gap-1.5 px-3 py-2.5 sm:grid sm:grid-cols-12 sm:items-center sm:gap-0 sm:p-0 lg:flex-1">
                   <div className="flex items-center gap-2 sm:contents">
-                    <div className="shrink-0 font-mono text-xs font-semibold text-muted-foreground sm:text-foreground sm:col-span-2 sm:px-3 sm:py-2.5 sm:border-r sm:border-border-strong/50 sm:text-center">
+                    <div className="shrink-0 font-mono text-xs font-semibold text-muted-foreground sm:text-foreground sm:col-span-2 sm:px-3 sm:py-2.5 sm:border-r sm:border-border-strong/50 sm:text-center sm:self-stretch sm:flex sm:items-center sm:justify-center">
                       4.3
                     </div>
                     <label
                       htmlFor="field-logAgingMonths"
-                      className="text-sm font-medium sm:col-span-5 sm:px-3 sm:py-2.5 sm:border-r sm:border-border-strong/50"
+                      className="text-sm font-medium sm:col-span-5 sm:px-3 sm:py-2.5 sm:border-r sm:border-border-strong/50 sm:self-stretch sm:flex sm:items-center"
                     >
                       Log Aging In Storage
                     </label>
                   </div>
                   <div className="flex items-center gap-2 sm:contents">
-                    <div className="flex-1 sm:col-span-3 sm:px-3 sm:py-1.5 sm:border-r sm:border-border-strong/50">
+                    <div className="flex-1 sm:col-span-3 sm:px-3 sm:py-1.5 sm:border-r sm:border-border-strong/50 sm:self-stretch sm:flex sm:items-center">
                       <input
                         id="field-logAgingMonths"
                         type="number"
@@ -2127,27 +2132,27 @@ export function ShiftReportForm({
                         className="h-10 sm:h-9 w-full rounded border border-border bg-surface px-2.5 text-center text-sm font-mono tabular-nums focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                       />
                     </div>
-                    <div className="shrink-0 w-16 sm:w-auto sm:col-span-2 px-2 py-2.5 text-center text-xs font-medium text-muted-foreground">
+                    <div className="shrink-0 w-16 sm:w-auto sm:col-span-2 px-2 py-2.5 text-center text-xs font-medium text-muted-foreground sm:self-stretch sm:flex sm:items-center sm:justify-center">
                       Months
                     </div>
                   </div>
                 </div>
 
                 {/* 4.4 Avg. Log Diameter */}
-                <div className="flex flex-col gap-1.5 px-3 py-2.5 sm:grid sm:grid-cols-12 sm:items-center sm:gap-0 sm:p-0">
+                <div className="flex flex-col gap-1.5 px-3 py-2.5 sm:grid sm:grid-cols-12 sm:items-center sm:gap-0 sm:p-0 lg:flex-1">
                   <div className="flex items-center gap-2 sm:contents">
-                    <div className="shrink-0 font-mono text-xs font-semibold text-muted-foreground sm:text-foreground sm:col-span-2 sm:px-3 sm:py-2.5 sm:border-r sm:border-border-strong/50 sm:text-center">
+                    <div className="shrink-0 font-mono text-xs font-semibold text-muted-foreground sm:text-foreground sm:col-span-2 sm:px-3 sm:py-2.5 sm:border-r sm:border-border-strong/50 sm:text-center sm:self-stretch sm:flex sm:items-center sm:justify-center">
                       4.4
                     </div>
                     <label
                       htmlFor="field-avgLogDiameterCm"
-                      className="text-sm font-medium sm:col-span-5 sm:px-3 sm:py-2.5 sm:border-r sm:border-border-strong/50"
+                      className="text-sm font-medium sm:col-span-5 sm:px-3 sm:py-2.5 sm:border-r sm:border-border-strong/50 sm:self-stretch sm:flex sm:items-center"
                     >
                       Avg. Log Diameter
                     </label>
                   </div>
                   <div className="flex items-center gap-2 sm:contents">
-                    <div className="flex-1 sm:col-span-3 sm:px-3 sm:py-1.5 sm:border-r sm:border-border-strong/50">
+                    <div className="flex-1 sm:col-span-3 sm:px-3 sm:py-1.5 sm:border-r sm:border-border-strong/50 sm:self-stretch sm:flex sm:items-center">
                       <input
                         id="field-avgLogDiameterCm"
                         type="number"
@@ -2161,27 +2166,27 @@ export function ShiftReportForm({
                         className="h-10 sm:h-9 w-full rounded border border-border bg-surface px-2.5 text-center text-sm font-mono tabular-nums focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                       />
                     </div>
-                    <div className="shrink-0 w-16 sm:w-auto sm:col-span-2 px-2 py-2.5 text-center text-xs font-medium text-muted-foreground">
+                    <div className="shrink-0 w-16 sm:w-auto sm:col-span-2 px-2 py-2.5 text-center text-xs font-medium text-muted-foreground sm:self-stretch sm:flex sm:items-center sm:justify-center">
                       cm
                     </div>
                   </div>
                 </div>
 
                 {/* 4.5 Log Moisture */}
-                <div className="flex flex-col gap-1.5 px-3 py-2.5 sm:grid sm:grid-cols-12 sm:items-center sm:gap-0 sm:p-0">
+                <div className="flex flex-col gap-1.5 px-3 py-2.5 sm:grid sm:grid-cols-12 sm:items-center sm:gap-0 sm:p-0 lg:flex-1">
                   <div className="flex items-center gap-2 sm:contents">
-                    <div className="shrink-0 font-mono text-xs font-semibold text-muted-foreground sm:text-foreground sm:col-span-2 sm:px-3 sm:py-2.5 sm:border-r sm:border-border-strong/50 sm:text-center">
+                    <div className="shrink-0 font-mono text-xs font-semibold text-muted-foreground sm:text-foreground sm:col-span-2 sm:px-3 sm:py-2.5 sm:border-r sm:border-border-strong/50 sm:text-center sm:self-stretch sm:flex sm:items-center sm:justify-center">
                       4.5
                     </div>
                     <label
                       htmlFor="field-logMoisturePct"
-                      className="text-sm font-medium sm:col-span-5 sm:px-3 sm:py-2.5 sm:border-r sm:border-border-strong/50"
+                      className="text-sm font-medium sm:col-span-5 sm:px-3 sm:py-2.5 sm:border-r sm:border-border-strong/50 sm:self-stretch sm:flex sm:items-center"
                     >
                       Log Moisture
                     </label>
                   </div>
                   <div className="flex items-center gap-2 sm:contents">
-                    <div className="flex-1 sm:col-span-3 sm:px-3 sm:py-1.5 sm:border-r sm:border-border-strong/50">
+                    <div className="flex-1 sm:col-span-3 sm:px-3 sm:py-1.5 sm:border-r sm:border-border-strong/50 sm:self-stretch sm:flex sm:items-center">
                       <input
                         id="field-logMoisturePct"
                         type="number"
@@ -2196,23 +2201,23 @@ export function ShiftReportForm({
                         className="h-10 sm:h-9 w-full rounded border border-border bg-surface px-2.5 text-center text-sm font-mono tabular-nums focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                       />
                     </div>
-                    <div className="shrink-0 w-16 sm:w-auto sm:col-span-2 px-2 py-2.5 text-center text-xs font-medium text-muted-foreground">
+                    <div className="shrink-0 w-16 sm:w-auto sm:col-span-2 px-2 py-2.5 text-center text-xs font-medium text-muted-foreground sm:self-stretch sm:flex sm:items-center sm:justify-center">
                       %
                     </div>
                   </div>
                 </div>
 
                 {/* 4.6 Percentage Log Diameter (exact 2 pairs: XX % XX cm XX % XX cm) */}
-                <div className="flex flex-col gap-2 px-3 py-2.5 sm:grid sm:grid-cols-12 sm:items-center sm:gap-0 sm:p-0">
+                <div className="flex flex-col gap-2 px-3 py-2.5 sm:grid sm:grid-cols-12 sm:items-center sm:gap-0 sm:p-0 lg:flex-1">
                   <div className="flex items-center gap-2 sm:contents">
-                    <div className="shrink-0 font-mono text-xs font-semibold text-muted-foreground sm:text-foreground sm:col-span-2 sm:px-3 sm:py-2.5 sm:border-r sm:border-border-strong/50 sm:text-center">
+                    <div className="shrink-0 font-mono text-xs font-semibold text-muted-foreground sm:text-foreground sm:col-span-2 sm:px-3 sm:py-2.5 sm:border-r sm:border-border-strong/50 sm:text-center sm:self-stretch sm:flex sm:items-center sm:justify-center">
                       4.6
                     </div>
-                    <div className="text-sm font-medium sm:col-span-5 sm:px-3 sm:py-2.5 sm:border-r sm:border-border-strong/50">
+                    <div className="text-sm font-medium sm:col-span-5 sm:px-3 sm:py-2.5 sm:border-r sm:border-border-strong/50 sm:self-stretch sm:flex sm:items-center">
                       Percentage Log Diameter
                     </div>
                   </div>
-                  <div className="sm:col-span-5 sm:p-2 grid grid-cols-1 lg:grid-cols-2 gap-2">
+                  <div className="sm:col-span-5 sm:p-2 grid grid-cols-1 lg:grid-cols-2 gap-2 sm:self-stretch sm:items-center">
                     <div className="flex items-center gap-1.5">
                       <input
                         id="field-diameterPct1"

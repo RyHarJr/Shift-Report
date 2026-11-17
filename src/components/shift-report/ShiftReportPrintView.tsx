@@ -275,13 +275,13 @@ export function ShiftReportPrintView({ report }: ShiftReportPrintViewProps) {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-12">
-            <div className="md:col-span-8 md:border-r md:border-border divide-y divide-border">
+            <div className="md:col-span-8 md:border-r md:border-border flex flex-col divide-y divide-border">
               {CHIP_QUALITY_METRICS.map((metric) => {
                 const value = report[metric.key];
                 return (
                   <div
                     key={metric.key}
-                    className="grid grid-cols-12 px-4 py-2 text-sm items-center"
+                    className="grid grid-cols-12 px-4 py-2 text-sm items-center md:flex-1"
                   >
                     <span className="col-span-2 font-mono text-xs text-muted-foreground">
                       {metric.code}
@@ -351,8 +351,8 @@ export function ShiftReportPrintView({ report }: ShiftReportPrintViewProps) {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-12">
-            <div className="md:col-span-7 md:border-r md:border-border divide-y divide-border">
-              <div className="px-4 py-2.5 flex flex-col sm:flex-row sm:items-center sm:justify-between print:flex-row print:items-center print:justify-between gap-2 text-sm">
+            <div className="md:col-span-7 md:border-r md:border-border flex flex-col divide-y divide-border">
+              <div className="px-4 py-2.5 flex flex-col sm:flex-row sm:items-center sm:justify-between print:flex-row print:items-center print:justify-between gap-2 text-sm md:flex-1">
                 <span className="font-medium text-foreground">2.1 Layer</span>
                 <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5">
                   <BoolMark
@@ -366,7 +366,7 @@ export function ShiftReportPrintView({ report }: ShiftReportPrintViewProps) {
                 </div>
               </div>
 
-              <div className="px-4 py-2.5 flex flex-col sm:flex-row sm:items-center sm:justify-between print:flex-row print:items-center print:justify-between gap-2 text-sm">
+              <div className="px-4 py-2.5 flex flex-col sm:flex-row sm:items-center sm:justify-between print:flex-row print:items-center print:justify-between gap-2 text-sm md:flex-1">
                 <span className="font-medium text-foreground">
                   2.2 Log Condition
                 </span>
@@ -379,7 +379,7 @@ export function ShiftReportPrintView({ report }: ShiftReportPrintViewProps) {
                 </div>
               </div>
 
-              <div className="grid grid-cols-12 px-4 py-2 text-sm">
+              <div className="grid grid-cols-12 px-4 py-2 text-sm items-center md:flex-1">
                 <span className="col-span-2 font-mono text-xs text-muted-foreground">
                   2.2.3
                 </span>
@@ -388,7 +388,7 @@ export function ShiftReportPrintView({ report }: ShiftReportPrintViewProps) {
                   <YesNoLabel value={report.lotsOfBark} />
                 </span>
               </div>
-              <div className="grid grid-cols-12 px-4 py-2 text-sm">
+              <div className="grid grid-cols-12 px-4 py-2 text-sm items-center md:flex-1">
                 <span className="col-span-2 font-mono text-xs text-muted-foreground">
                   2.2.4
                 </span>
@@ -397,7 +397,7 @@ export function ShiftReportPrintView({ report }: ShiftReportPrintViewProps) {
                   <YesNoLabel value={report.lotsOfSand} />
                 </span>
               </div>
-              <div className="grid grid-cols-12 px-4 py-2 text-sm">
+              <div className="grid grid-cols-12 px-4 py-2 text-sm items-center md:flex-1">
                 <span className="col-span-2 font-mono text-xs text-muted-foreground">
                   2.2.5
                 </span>
@@ -593,14 +593,14 @@ export function ShiftReportPrintView({ report }: ShiftReportPrintViewProps) {
 
           {/* 3.2 Chipper Part Condition */}
           <div className="grid grid-cols-1 md:grid-cols-12">
-            <div className="md:col-span-8 md:border-r md:border-border divide-y divide-border">
+            <div className="md:col-span-8 md:border-r md:border-border flex flex-col divide-y divide-border">
               <div className="bg-background/50 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-foreground">
                 3.2 Chipper Part Condition
               </div>
               {CHIPPER_PARTS.map((part) => (
                 <div
                   key={part.key}
-                  className="grid grid-cols-12 px-4 py-2 text-sm items-center"
+                  className="grid grid-cols-12 px-4 py-2 text-sm items-center md:flex-1"
                 >
                   <span className="col-span-2 font-mono text-xs text-muted-foreground">
                     {part.code}
@@ -662,8 +662,8 @@ export function ShiftReportPrintView({ report }: ShiftReportPrintViewProps) {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-12">
-            <div className="md:col-span-8 md:border-r md:border-border divide-y divide-border">
-              <div className="grid grid-cols-12 px-4 py-2 text-sm">
+            <div className="md:col-span-8 md:border-r md:border-border flex flex-col divide-y divide-border">
+              <div className="grid grid-cols-12 px-4 py-2 text-sm items-center md:flex-1">
                 <span className="col-span-2 font-mono text-xs text-muted-foreground">
                   4.1
                 </span>
@@ -674,7 +674,7 @@ export function ShiftReportPrintView({ report }: ShiftReportPrintViewProps) {
                   {report.logYardNumber || "—"}
                 </span>
               </div>
-              <div className="grid grid-cols-12 px-4 py-2 text-sm">
+              <div className="grid grid-cols-12 px-4 py-2 text-sm items-center md:flex-1">
                 <span className="col-span-2 font-mono text-xs text-muted-foreground">
                   4.2
                 </span>
@@ -685,7 +685,7 @@ export function ShiftReportPrintView({ report }: ShiftReportPrintViewProps) {
                     : "—"}
                 </span>
               </div>
-              <div className="grid grid-cols-12 px-4 py-2 text-sm">
+              <div className="grid grid-cols-12 px-4 py-2 text-sm items-center md:flex-1">
                 <span className="col-span-2 font-mono text-xs text-muted-foreground">
                   4.3
                 </span>
@@ -698,7 +698,7 @@ export function ShiftReportPrintView({ report }: ShiftReportPrintViewProps) {
                     : "—"}
                 </span>
               </div>
-              <div className="grid grid-cols-12 px-4 py-2 text-sm">
+              <div className="grid grid-cols-12 px-4 py-2 text-sm items-center md:flex-1">
                 <span className="col-span-2 font-mono text-xs text-muted-foreground">
                   4.4
                 </span>
@@ -711,7 +711,7 @@ export function ShiftReportPrintView({ report }: ShiftReportPrintViewProps) {
                     : "—"}
                 </span>
               </div>
-              <div className="grid grid-cols-12 px-4 py-2 text-sm">
+              <div className="grid grid-cols-12 px-4 py-2 text-sm items-center md:flex-1">
                 <span className="col-span-2 font-mono text-xs text-muted-foreground">
                   4.5
                 </span>
@@ -722,7 +722,7 @@ export function ShiftReportPrintView({ report }: ShiftReportPrintViewProps) {
                     : "—"}
                 </span>
               </div>
-              <div className="flex flex-col gap-1.5 px-4 py-2.5 text-sm sm:grid sm:grid-cols-12 sm:items-start sm:gap-0 print:grid print:grid-cols-12 print:items-start print:gap-0">
+              <div className="flex flex-col gap-1.5 px-4 py-2.5 text-sm sm:grid sm:grid-cols-12 sm:items-center sm:gap-0 md:flex-1 print:grid print:grid-cols-12 print:items-start print:gap-0">
                 <div className="flex items-center gap-2 sm:contents print:contents">
                   <span className="font-mono text-xs text-muted-foreground sm:col-span-2 print:col-span-2">
                     4.6

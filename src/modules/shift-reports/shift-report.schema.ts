@@ -194,6 +194,7 @@ export const shiftReportInputSchema = z.object({
   partBedKnife: partConditionSchema,
   partSideWearPlateInner: partConditionSchema,
   partSideWearPlateOuter: partConditionSchema,
+  partFeedSpot: partConditionSchema,
   partRemarks: optionalString(2000),
   partRemarksPhotoUrl: optionalPhotoUrl,
   partRemarks2: optionalString(2000),

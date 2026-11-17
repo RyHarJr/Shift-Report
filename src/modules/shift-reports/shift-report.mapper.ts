@@ -82,6 +82,7 @@ export function toShiftReportDTO(report: ShiftReport): ShiftReportDTO {
     partBedKnife: report.partBedKnife,
     partSideWearPlateInner: report.partSideWearPlateInner,
     partSideWearPlateOuter: report.partSideWearPlateOuter,
+    partFeedSpot: report.partFeedSpot,
     partRemarks: report.partRemarks,
     partRemarksPhotoUrl: report.partRemarksPhotoUrl,
     partRemarks2: report.partRemarks2,

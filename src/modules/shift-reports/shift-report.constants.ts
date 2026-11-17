@@ -67,6 +67,7 @@ export const CHIPPER_PARTS = [
   { key: "partBedKnife", code: "3.2.10", label: "Bed Knife" },
   { key: "partSideWearPlateInner", code: "3.2.11", label: "Side Wear Plate Inner" },
   { key: "partSideWearPlateOuter", code: "3.2.12", label: "Side Wear Plate Outer" },
+  { key: "partFeedSpot", code: "3.2.13", label: "Feed Spot" },
 ] as const;
 
 export type ChipperPartKey = (typeof CHIPPER_PARTS)[number]["key"];

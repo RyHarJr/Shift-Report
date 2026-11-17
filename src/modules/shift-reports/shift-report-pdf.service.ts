@@ -1121,9 +1121,9 @@ function drawPage2(
   const partHdrH = 19;
   const partColH = 19;
   const partRowH = 21;
-  const partSectionH = partHdrH + partColH + partRowH * CHIPPER_PARTS.length; // 38 + 252 = 290
+  const partSectionH = partHdrH + partColH + partRowH * CHIPPER_PARTS.length; // 38 + 273 = 311
 
-  const s3TotalH = geoSectionH + partSectionH + 10; // 402
+  const s3TotalH = geoSectionH + partSectionH + 10; // 423
   drawDoubleFrame(doc, PAGE_LEFT, s3Y, CONTENT_W, s3TotalH);
 
   const inX = PAGE_LEFT + 3;

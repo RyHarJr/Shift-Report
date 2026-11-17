@@ -107,6 +107,7 @@ function buildPersistencePayload(
     partBedKnife: parsed.partBedKnife,
     partSideWearPlateInner: parsed.partSideWearPlateInner,
     partSideWearPlateOuter: parsed.partSideWearPlateOuter,
+    partFeedSpot: parsed.partFeedSpot,
     partRemarks: parsed.partRemarks,
     partRemarksPhotoUrl: parsed.partRemarksPhotoUrl,
     partRemarks2: parsed.partRemarks2,
