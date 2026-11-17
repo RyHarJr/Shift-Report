@@ -15,6 +15,10 @@ import {
 import { BrandMark } from "@/components/shared/AppHeader";
 import { Button } from "@/components/ui/Button";
 import { useToast } from "@/components/ui/Toast";
+import {
+  formatBytesLabel,
+  optimizeImageBeforeUpload,
+} from "@/lib/client-image-resize";
 import { cn, roundDecimal } from "@/lib/utils";
 import {
   CHIP_QUALITY_METRICS,
@@ -499,8 +503,9 @@ export function ShiftReportForm({
     setPhotoErrors((prev) => ({ ...prev, [slotKey]: undefined }));
     setUploadingPhotoSlot(slotKey);
     try {
+      const prepared = await optimizeImageBeforeUpload(file);
       const fd = new FormData();
-      fd.append("file", file);
+      fd.append("file", prepared.file);
 
       const res = await fetch("/api/uploads", {
         method: "POST",
@@ -508,7 +513,7 @@ export function ShiftReportForm({
       });
       const json = (await res.json()) as {
         success: boolean;
-        data?: { url: string };
+        data?: { url: string; optimizedSize?: number };
         error?: { message: string };
       };
 
@@ -520,7 +525,16 @@ export function ShiftReportForm({
       }
 
       setField(slotKey, json.data.url);
-      showToast(`${slotLabel} berhasil diunggah.`, "success");
+      const finalSize = json.data.optimizedSize ?? prepared.clientSize;
+      const savedRatio =
+        prepared.originalSize > 0
+          ? (prepared.originalSize - finalSize) / prepared.originalSize
+          : 0;
+      const summarySuffix =
+        savedRatio >= 0.1
+          ? ` (${formatBytesLabel(prepared.originalSize)} → ${formatBytesLabel(finalSize)})`
+          : "";
+      showToast(`${slotLabel} berhasil diunggah${summarySuffix}.`, "success");
     } catch {
       const message = "Tidak dapat mengunggah foto. Periksa koneksi Anda.";
       setPhotoErrors((prev) => ({ ...prev, [slotKey]: message }));
@@ -1616,7 +1630,7 @@ export function ShiftReportForm({
                                 : `Unggah ${slot.label}`}
                             </p>
                             <p className="mt-0.5 text-[11px] text-muted-foreground">
-                              JPG, PNG, WebP &bull; Max 5 MB
+                              JPG, PNG, WebP &bull; Auto-resize &amp; kompres
                             </p>
                             <input
                               type="file"

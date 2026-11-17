@@ -165,5 +165,5 @@ Buka aplikasi di browser:
 | `/api/shift-reports/charts` | `GET` | Admin | Mengambil data deret waktu untuk grafik kualitas chip |
 | `/api/shift-reports/[id]` | `GET`, `PATCH`, `DELETE` | Admin | Mengambil detail, memperbarui, atau menghapus laporan |
 | `/api/shift-reports/[id]/pdf` | `GET` | Admin | Menghasilkan dan mengunduh file PDF Shift Report |
-| `/api/uploads` | `POST` | Publik | Mengunggah foto JPG/PNG/WebP (maks. `5 MB`) ke `storage/uploads` |
+| `/api/uploads` | `POST` | Publik | Mengunggah foto JPG/PNG/WebP (maks. `15 MB`, auto-resize &amp; kompres otomatis) ke `storage/uploads` |
 | `/api/uploads/[filename]` | `GET` | Publik | Menyajikan file gambar terunggah dengan validasi nama file |
