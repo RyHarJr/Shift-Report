@@ -53,8 +53,6 @@ Formulir digital terstruktur yang mengikuti format lembar inspeksi standar 2 hal
 │   └── seed.ts                  # Seeder akun admin default & data sampel awal
 ├── public/
 │   └── Andritz-Symbol.png       # Logo aplikasi, favicon, dan header PDF
-├── storage/
-│   └── uploads/                 # Penyimpanan lokal file foto yang diunggah (di-ignore git)
 ├── src/
 │   ├── proxy.ts                 # Guard autentikasi route /admin/*
 │   ├── app/
@@ -73,7 +71,8 @@ Formulir digital terstruktur yang mengikuti format lembar inspeksi standar 2 hal
 │   ├── lib/                     # Prisma client singleton, response helper, error class, utils
 │   └── modules/
 │       ├── auth/                # Layanan autentikasi & verifikasi JWT cookie
-│       └── shift-reports/       # Schema Zod, mapper, repository, service, dan generator PDF
+│       ├── shift-reports/       # Schema Zod, mapper, repository, service, dan generator PDF
+│       └── uploads/             # Optimasi gambar (Sharp) & client Power Automate SharePoint
 ├── .env.example                 # Template environment variables
 ├── next.config.ts               # Konfigurasi Next.js (Cache Components, rewrite favicon)
 └── package.json
@@ -101,6 +100,10 @@ AUTH_SECRET="ganti-dengan-string-acak-minimal-32-karakter"
 ADMIN_DEFAULT_USERNAME="admin"
 ADMIN_DEFAULT_NAME="Administrator QC"
 ADMIN_DEFAULT_PASSWORD="Admin123!ChangeMe"
+
+# Power Automate HTTP Trigger URLs untuk penyimpanan gambar SharePoint
+UPLOAD_IMAGE="https://your-env.api.powerplatform.com/.../invoke?api-version=1&sp=...&sv=1.0&sig=REPLACE_ME"
+GET_IMAGE="https://your-env.api.powerplatform.com/.../invoke?api-version=1&sp=...&sv=1.0&sig=REPLACE_ME"
 ```
 > **Catatan:** Pastikan database MySQL target (misalnya `shift_report`) sudah dibuat sebelum menjalankan migrasi, dan ubah `ADMIN_DEFAULT_PASSWORD` serta `AUTH_SECRET` sebelum digunakan di produksi.
 
@@ -165,5 +168,5 @@ Buka aplikasi di browser:
 | `/api/shift-reports/charts` | `GET` | Admin | Mengambil data deret waktu untuk grafik kualitas chip |
 | `/api/shift-reports/[id]` | `GET`, `PATCH`, `DELETE` | Admin | Mengambil detail, memperbarui, atau menghapus laporan |
 | `/api/shift-reports/[id]/pdf` | `GET` | Admin | Menghasilkan dan mengunduh file PDF Shift Report |
-| `/api/uploads` | `POST` | Publik | Mengunggah foto JPG/PNG/WebP (maks. `15 MB`, auto-resize &amp; kompres otomatis) ke `storage/uploads` |
-| `/api/uploads/[filename]` | `GET` | Publik | Menyajikan file gambar terunggah dengan validasi nama file |
+| `/api/uploads` | `POST` | Publik | Mengunggah foto JPG/PNG/WebP (maks. `15 MB`, auto-resize &amp; kompres ≤ `5 MB`) ke SharePoint melalui Power Automate (`UPLOAD_IMAGE`) |
+| `/api/uploads/[id]` | `GET` | Publik | Mengambil dan menyajikan gambar dari SharePoint berdasarkan ID melalui Power Automate (`GET_IMAGE`) |

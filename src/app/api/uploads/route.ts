@@ -1,17 +1,30 @@
-import crypto from "node:crypto";
-import fs from "node:fs/promises";
-import path from "node:path";
 import { NextRequest } from "next/server";
 import { handleApiError, okResponse } from "@/lib/api-response";
 import { AppError } from "@/lib/errors";
 import {
   MAX_RAW_UPLOAD_BYTES,
   optimizeUploadedImage,
+  type UploadImageExt,
 } from "@/modules/uploads/image-optimizer";
+import { uploadImageToPowerAutomate } from "@/modules/uploads/power-automate-image.client";
+import { buildUploadImageUrl } from "@/modules/uploads/upload-url";
 
 const ALLOWED_MIME_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
 
-const UPLOAD_DIR = path.join(process.cwd(), "storage", "uploads");
+function buildUploadFileName(
+  originalName: string,
+  ext: UploadImageExt,
+): string {
+  const leafName = originalName.split(/[/\\]/).pop() ?? "shift-photo";
+  const withoutExt = leafName.replace(/\.[^.]+$/, "");
+  const sanitized = withoutExt
+    .replace(/[^A-Za-z0-9_-]+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "")
+    .slice(0, 60);
+
+  return `${sanitized || "shift-photo"}.${ext}`;
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -40,17 +53,19 @@ export async function POST(request: NextRequest) {
 
     const rawBuffer = Buffer.from(await file.arrayBuffer());
     const optimized = await optimizeUploadedImage(rawBuffer, file.type);
+    const fileName = buildUploadFileName(file.name, optimized.ext);
 
-    await fs.mkdir(UPLOAD_DIR, { recursive: true });
-    const filename = `${Date.now()}-${crypto.randomUUID()}.${optimized.ext}`;
-    const targetPath = path.join(UPLOAD_DIR, filename);
-
-    await fs.writeFile(targetPath, optimized.buffer);
+    const uploaded = await uploadImageToPowerAutomate({
+      fileName,
+      buffer: optimized.buffer,
+      contentType: optimized.mimeType,
+    });
 
     return okResponse(
       {
-        url: `/api/uploads/${filename}`,
-        filename,
+        id: uploaded.id,
+        url: buildUploadImageUrl(uploaded.id),
+        filename: uploaded.name,
         originalSize: optimized.originalSize,
         optimizedSize: optimized.optimizedSize,
         width: optimized.width,
@@ -62,4 +77,3 @@ export async function POST(request: NextRequest) {
     return handleApiError(error);
   }
 }
-

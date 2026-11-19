@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { SAFE_UPLOAD_URL_REGEX } from "@/modules/uploads/upload-url";
 
 const TIME_HH_MM_REGEX = /^([01]\d|2[0-3]):[0-5]\d$/;
 
@@ -62,8 +63,6 @@ const optionalString = (maxLength = 1000) =>
     },
     z.string().max(maxLength, `Maksimal ${maxLength} karakter.`).nullable(),
   );
-
-const SAFE_UPLOAD_URL_REGEX = /^\/api\/uploads\/[0-9]+-[0-9a-f-]+\.(?:jpg|png|webp)$/i;
 
 const optionalPhotoUrl = z.preprocess(
   (val) => {

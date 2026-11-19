@@ -4,15 +4,14 @@ import path from "node:path";
 import PDFDocument from "pdfkit";
 import sharp from "sharp";
 import { formatDateDisplay, formatNumber } from "@/lib/utils";
+import { getImageFromPowerAutomate } from "@/modules/uploads/power-automate-image.client";
+import { extractUploadImageId } from "@/modules/uploads/upload-url";
 import {
   CHIP_QUALITY_METRICS,
   CHIPPER_LABEL_MAP,
   CHIPPER_PARTS,
 } from "./shift-report.constants";
 import type { ShiftReportDTO } from "./shift-report.types";
-
-const UPLOAD_DIR = path.join(process.cwd(), "storage", "uploads");
-const SAFE_UPLOAD_URL_REGEX = /^\/api\/uploads\/([0-9]+-[0-9a-f-]+\.(?:jpg|png|webp))$/i;
 
 const BLUE = "#005A9C";
 const DARK = "#0F172A";
@@ -47,13 +46,11 @@ async function loadUploadImageBuffer(
   width: number,
   height: number,
 ): Promise<Buffer | null> {
-  if (!url) return null;
-  const match = SAFE_UPLOAD_URL_REGEX.exec(url);
-  if (!match) return null;
+  const imageId = extractUploadImageId(url);
+  if (!imageId) return null;
 
-  const filePath = path.join(UPLOAD_DIR, match[1]);
   try {
-    const rawBuffer = await fs.readFile(filePath);
+    const { buffer: rawBuffer } = await getImageFromPowerAutomate(imageId);
     return await sharp(rawBuffer)
       .rotate()
       .flatten({ background: "#ffffff" })
@@ -91,20 +88,19 @@ async function loadOperationalPhotos(
     },
   ];
 
-  const loaded: LoadedPhoto[] = [];
-
-  for (const slot of slots) {
-    const buffer = await loadUploadImageBuffer(slot.url, 900, 675);
-    if (buffer) {
-      loaded.push({
+  const results = await Promise.all(
+    slots.map(async (slot) => {
+      const buffer = await loadUploadImageBuffer(slot.url, 900, 675);
+      if (!buffer) return null;
+      return {
         label: slot.label,
         caption: slot.caption,
         buffer,
-      });
-    }
-  }
+      };
+    }),
+  );
 
-  return loaded;
+  return results.filter((photo): photo is LoadedPhoto => photo !== null);
 }
 
 async function loadRemarksPhotoBuffers(
