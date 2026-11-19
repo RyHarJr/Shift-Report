@@ -1,7 +1,7 @@
-import { Suspense } from "react";
-import { connection } from "next/server";
-import { AppHeader } from "@/components/shared/AppHeader";
-import { ShiftReportForm } from "@/components/shift-report/ShiftReportForm";
+import { Suspense } from "react"
+import { connection } from "next/server"
+import { AppHeader } from "@/components/shared/AppHeader"
+import { ShiftReportForm } from "@/components/shift-report/ShiftReportForm"
 
 function FormSkeleton() {
   return (
@@ -25,16 +25,16 @@ function FormSkeleton() {
         <div className="h-56 rounded bg-surface-muted" />
       </div>
     </div>
-  );
+  )
 }
 
 async function ShiftReportFormContainer() {
-  await connection();
+  await connection()
   const todayJakarta = new Intl.DateTimeFormat("en-CA", {
     timeZone: "Asia/Jakarta",
-  }).format(new Date());
+  }).format(new Date())
 
-  return <ShiftReportForm mode="create" defaultDate={todayJakarta} />;
+  return <ShiftReportForm mode="create" defaultDate={todayJakarta} />
 }
 
 export default function HomePage() {
@@ -45,7 +45,7 @@ export default function HomePage() {
         <div className="mb-5 flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <h1 className="text-xl font-semibold tracking-tight text-foreground sm:text-2xl">
-              Input Shift Report Inspeksi Chip
+              Turn Knife - PT Tanjung Enim Lestari
             </h1>
             <p className="text-sm text-muted-foreground">
               Formulir digital 2 halaman sesuai lembar resmi PT Tanjung Enim
@@ -62,5 +62,5 @@ export default function HomePage() {
         </Suspense>
       </main>
     </div>
-  );
+  )
 }
