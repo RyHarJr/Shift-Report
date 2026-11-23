@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
+  FileSpreadsheet,
   Filter,
   Plus,
   RotateCcw,
@@ -214,6 +215,13 @@ export function AdminDashboardClient({
     Boolean(appliedFilters.dateTo) ||
     Boolean(appliedFilters.search.trim());
 
+  const excelExportHref = useMemo(() => {
+    const query = buildQueryParams(appliedFilters).toString();
+    return query
+      ? `/api/shift-reports/excel?${query}`
+      : "/api/shift-reports/excel";
+  }, [appliedFilters]);
+
   const summaryStats = useMemo(() => {
     if (chartPoints.length === 0) {
       return {
@@ -389,12 +397,41 @@ export function AdminDashboardClient({
               riwayat inspeksi PT Tanjung Enim Lestari.
             </p>
           </div>
-          <Link href="/" className="w-full sm:w-auto shrink-0">
-            <Button size="md" className="w-full sm:w-auto">
-              <Plus className="size-4" aria-hidden="true" />
-              <span>Input Laporan Baru</span>
-            </Button>
-          </Link>
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto shrink-0">
+            {meta.total > 0 ? (
+              <a
+                href={excelExportHref}
+                className="inline-flex h-10 w-full sm:w-auto items-center justify-center gap-2 rounded border border-border-strong/50 bg-surface px-4 text-sm font-medium text-foreground hover:bg-surface-muted transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                title="Export semua laporan sesuai filter ke Excel (.xlsx)"
+              >
+                <FileSpreadsheet
+                  className="size-4 text-success shrink-0"
+                  aria-hidden="true"
+                />
+                <span>Export Excel</span>
+              </a>
+            ) : (
+              <Button
+                variant="outline"
+                size="md"
+                disabled
+                className="w-full sm:w-auto"
+                title="Tidak ada data untuk diekspor"
+              >
+                <FileSpreadsheet
+                  className="size-4 text-muted-foreground"
+                  aria-hidden="true"
+                />
+                <span>Export Excel</span>
+              </Button>
+            )}
+            <Link href="/" className="w-full sm:w-auto shrink-0">
+              <Button size="md" className="w-full sm:w-auto">
+                <Plus className="size-4" aria-hidden="true" />
+                <span>Input Laporan Baru</span>
+              </Button>
+            </Link>
+          </div>
         </div>
 
         {/* Summary KPIs */}

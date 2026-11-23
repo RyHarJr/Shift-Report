@@ -147,6 +147,11 @@ export const shiftReportService = {
     return shiftReportRepository.findChartSeries(parsed);
   },
 
+  async getExportReports(rawQuery: unknown) {
+    const parsed = shiftReportQuerySchema.parse(rawQuery);
+    return shiftReportRepository.findForExport(parsed);
+  },
+
   async getReportById(id: string) {
     const report = await shiftReportRepository.findById(id);
     if (!report) {

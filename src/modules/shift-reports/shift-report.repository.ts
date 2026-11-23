@@ -138,6 +138,22 @@ export const shiftReportRepository = {
     return rows;
   },
 
+  async findForExport(
+    query: Omit<ShiftReportQueryInput, "page" | "limit">,
+    maxRows = 2000,
+  ) {
+    const where = buildWhereClause(query);
+    return prisma.shiftReport.findMany({
+      where,
+      orderBy: [
+        { reportDate: "desc" },
+        { shift: "desc" },
+        { createdAt: "desc" },
+      ],
+      take: maxRows,
+    });
+  },
+
   async findById(id: string) {
     return prisma.shiftReport.findUnique({
       where: { id },

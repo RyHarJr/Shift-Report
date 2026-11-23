@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeft, CheckSquare, FileDown, Pencil, Printer, Square } from "lucide-react";
+import { ArrowLeft, CheckSquare, FileDown, FileSpreadsheet, Pencil, Printer, Square } from "lucide-react";
 import { BrandMark } from "@/components/shared/AppHeader";
 import { Button } from "@/components/ui/Button";
 import { formatDateDisplay, formatNumber } from "@/lib/utils";
@@ -116,10 +116,20 @@ export function ShiftReportPrintView({ report }: ShiftReportPrintViewProps) {
             <FileDown className="size-4" aria-hidden="true" />
             <span>Export PDF</span>
           </a>
+          <a
+            href={`/api/shift-reports/${report.id}/excel`}
+            className="inline-flex h-9 w-full sm:w-auto items-center justify-center gap-1.5 rounded border border-border-strong/50 bg-surface px-3 text-xs font-medium text-foreground hover:bg-surface-muted transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          >
+            <FileSpreadsheet
+              className="size-4 text-success"
+              aria-hidden="true"
+            />
+            <span>Export Excel</span>
+          </a>
           <Button
             size="sm"
             onClick={() => window.print()}
-            className="col-span-2 sm:col-span-1 w-full sm:w-auto"
+            className="w-full sm:w-auto"
           >
             <Printer className="size-4" aria-hidden="true" />
             <span>Cetak Browser</span>

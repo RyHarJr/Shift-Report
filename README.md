@@ -39,7 +39,7 @@ Formulir digital terstruktur yang mengikuti format lembar inspeksi standar 2 hal
 | Database & ORM | MySQL, Prisma ORM `^6.19.3` (`@prisma/client`) |
 | Autentikasi | `jose` (JWT session cookie) + `node:crypto` (`scrypt`) |
 | Grafik | `recharts` `^3.10.1` |
-| Pemrosesan Gambar & PDF | `pdfkit` `^0.20.2`, `sharp` `^0.35.5` |
+| Pemrosesan Gambar & Dokumen | `pdfkit` `^0.20.2`, `sharp` `^0.35.5`, `exceljs` |
 
 ---
 
@@ -165,8 +165,10 @@ Buka aplikasi di browser:
 | `/api/auth/logout` | `POST` | Publik | Menghapus sesi admin aktif |
 | `/api/shift-reports` | `POST` | Publik | Menyimpan laporan Shift Report baru |
 | `/api/shift-reports` | `GET` | Admin | Mengambil daftar laporan dengan filter & pagination |
+| `/api/shift-reports/excel` | `GET` | Admin | Mengunduh rekap semua laporan sesuai filter ke format Excel (`.xlsx`) |
 | `/api/shift-reports/charts` | `GET` | Admin | Mengambil data deret waktu untuk grafik kualitas chip |
 | `/api/shift-reports/[id]` | `GET`, `PATCH`, `DELETE` | Admin | Mengambil detail, memperbarui, atau menghapus laporan |
 | `/api/shift-reports/[id]/pdf` | `GET` | Admin | Menghasilkan dan mengunduh file PDF Shift Report |
+| `/api/shift-reports/[id]/excel` | `GET` | Admin | Menghasilkan dan mengunduh file Excel (`.xlsx`) untuk 1 laporan |
 | `/api/uploads` | `POST` | Publik | Mengunggah foto JPG/PNG/WebP (maks. `15 MB`, auto-resize &amp; kompres ≤ `5 MB`) ke SharePoint melalui Power Automate (`UPLOAD_IMAGE`) |
 | `/api/uploads/[id]` | `GET` | Publik | Mengambil dan menyajikan gambar dari SharePoint berdasarkan ID melalui Power Automate (`GET_IMAGE`) |

@@ -4,7 +4,7 @@ const nextConfig: NextConfig = {
   /* config options here */
   cacheComponents: true,
   partialPrefetching: true,
-  serverExternalPackages: ["pdfkit", "sharp"],
+  serverExternalPackages: ["pdfkit", "sharp", "exceljs"],
   async rewrites() {
     return [
       {
