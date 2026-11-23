@@ -112,6 +112,8 @@ interface ShiftReportFormState {
   diameterMm1: string;
   diameterPct2: string;
   diameterMm2: string;
+  diameterPct3: string;
+  diameterMm3: string;
   rawMaterialRemarks: string;
   rawMaterialRemarksPhotoUrl: string;
 }
@@ -206,6 +208,8 @@ function createInitialState(
       diameterMm1: "",
       diameterPct2: "",
       diameterMm2: "",
+      diameterPct3: "",
+      diameterMm3: "",
       rawMaterialRemarks: "",
       rawMaterialRemarksPhotoUrl: "",
     };
@@ -287,6 +291,8 @@ function createInitialState(
     diameterMm1: numToStr(initialData.diameterMm1),
     diameterPct2: numToStr(initialData.diameterPct2),
     diameterMm2: numToStr(initialData.diameterMm2),
+    diameterPct3: numToStr(initialData.diameterPct3),
+    diameterMm3: numToStr(initialData.diameterMm3),
     rawMaterialRemarks: initialData.rawMaterialRemarks ?? "",
     rawMaterialRemarksPhotoUrl: initialData.rawMaterialRemarksPhotoUrl ?? "",
   };
@@ -332,6 +338,27 @@ const PART_REMARK_SLOTS = [
     photoKey: "partRemarks2PhotoUrl",
     label: "Remarks 2",
     placeholder: "Catatan Part bagan 2...",
+  },
+] as const;
+
+const LOG_DIAMETER_PAIRS = [
+  {
+    pctKey: "diameterPct1",
+    mmKey: "diameterMm1",
+    pctLabel: "Persentase diameter 1",
+    mmLabel: "Ukuran diameter 1 dalam cm",
+  },
+  {
+    pctKey: "diameterPct2",
+    mmKey: "diameterMm2",
+    pctLabel: "Persentase diameter 2",
+    mmLabel: "Ukuran diameter 2 dalam cm",
+  },
+  {
+    pctKey: "diameterPct3",
+    mmKey: "diameterMm3",
+    pctLabel: "Persentase diameter 3",
+    mmLabel: "Ukuran diameter 3 dalam cm",
   },
 ] as const;
 
@@ -661,6 +688,8 @@ export function ShiftReportForm({
       diameterMm1: form.diameterMm1,
       diameterPct2: form.diameterPct2,
       diameterMm2: form.diameterMm2,
+      diameterPct3: form.diameterPct3,
+      diameterMm3: form.diameterMm3,
       rawMaterialRemarks: form.rawMaterialRemarks,
       rawMaterialRemarksPhotoUrl: form.rawMaterialRemarksPhotoUrl || null,
       rawMaterialRemarks2: "",
@@ -2207,7 +2236,7 @@ export function ShiftReportForm({
                   </div>
                 </div>
 
-                {/* 4.6 Percentage Log Diameter (exact 2 pairs: XX % XX cm XX % XX cm) */}
+                {/* 4.6 Percentage Log Diameter (3 pairs: XX % XX cm) */}
                 <div className="flex flex-col gap-2 px-3 py-2.5 sm:grid sm:grid-cols-12 sm:items-center sm:gap-0 sm:p-0 lg:flex-1">
                   <div className="flex items-center gap-2 sm:contents">
                     <div className="shrink-0 font-mono text-xs font-semibold text-muted-foreground sm:text-foreground sm:col-span-2 sm:px-3 sm:py-2.5 sm:border-r sm:border-border-strong/50 sm:text-center sm:self-stretch sm:flex sm:items-center sm:justify-center">
@@ -2217,78 +2246,71 @@ export function ShiftReportForm({
                       Percentage Log Diameter
                     </div>
                   </div>
-                  <div className="sm:col-span-5 sm:p-2 grid grid-cols-1 lg:grid-cols-2 gap-2 sm:self-stretch sm:items-center">
-                    <div className="flex items-center gap-1.5">
-                      <input
-                        id="field-diameterPct1"
-                        type="number"
-                        step="0.1"
-                        min="0"
-                        max="100"
-                        placeholder="XX"
-                        aria-label="Persentase diameter 1"
-                        value={form.diameterPct1}
-                        onChange={(e) =>
-                          setField("diameterPct1", e.target.value)
-                        }
-                        className="h-10 sm:h-9 w-full rounded border border-border bg-surface px-2 sm:px-1.5 text-center text-sm sm:text-xs font-mono tabular-nums focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                      />
-                      <span className="shrink-0 text-xs font-mono text-muted-foreground">
-                        %
-                      </span>
-                      <input
-                        id="field-diameterMm1"
-                        type="number"
-                        step="0.1"
-                        min="0"
-                        placeholder="XX"
-                        aria-label="Ukuran diameter 1 dalam cm"
-                        value={form.diameterMm1}
-                        onChange={(e) =>
-                          setField("diameterMm1", e.target.value)
-                        }
-                        className="h-10 sm:h-9 w-full rounded border border-border bg-surface px-2 sm:px-1.5 text-center text-sm sm:text-xs font-mono tabular-nums focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                      />
-                      <span className="shrink-0 text-xs font-mono text-muted-foreground">
-                        cm
-                      </span>
-                    </div>
-
-                    <div className="flex items-center gap-1.5">
-                      <input
-                        id="field-diameterPct2"
-                        type="number"
-                        step="0.1"
-                        min="0"
-                        max="100"
-                        placeholder="XX"
-                        aria-label="Persentase diameter 2"
-                        value={form.diameterPct2}
-                        onChange={(e) =>
-                          setField("diameterPct2", e.target.value)
-                        }
-                        className="h-10 sm:h-9 w-full rounded border border-border bg-surface px-2 sm:px-1.5 text-center text-sm sm:text-xs font-mono tabular-nums focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                      />
-                      <span className="shrink-0 text-xs font-mono text-muted-foreground">
-                        %
-                      </span>
-                      <input
-                        id="field-diameterMm2"
-                        type="number"
-                        step="0.1"
-                        min="0"
-                        placeholder="XX"
-                        aria-label="Ukuran diameter 2 dalam cm"
-                        value={form.diameterMm2}
-                        onChange={(e) =>
-                          setField("diameterMm2", e.target.value)
-                        }
-                        className="h-10 sm:h-9 w-full rounded border border-border bg-surface px-2 sm:px-1.5 text-center text-sm sm:text-xs font-mono tabular-nums focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                      />
-                      <span className="shrink-0 text-xs font-mono text-muted-foreground">
-                        cm
-                      </span>
-                    </div>
+                  <div className="sm:col-span-5 sm:p-2 grid grid-cols-1 gap-2 sm:self-stretch sm:items-center">
+                    {LOG_DIAMETER_PAIRS.map((pair) => {
+                      const pctError = errors[pair.pctKey];
+                      const mmError = errors[pair.mmKey];
+                      const rowError = [pctError, mmError]
+                        .filter(Boolean)
+                        .join(" • ");
+                      return (
+                        <div key={pair.pctKey} className="space-y-1">
+                          <div className="flex items-center gap-1.5">
+                            <input
+                              id={`field-${pair.pctKey}`}
+                              type="number"
+                              step="0.1"
+                              min="0"
+                              max="100"
+                              placeholder="XX"
+                              aria-label={pair.pctLabel}
+                              aria-invalid={!!pctError}
+                              value={form[pair.pctKey]}
+                              onChange={(e) =>
+                                setField(pair.pctKey, e.target.value)
+                              }
+                              className={cn(
+                                "h-10 sm:h-9 w-full rounded border border-border bg-surface px-2 sm:px-1.5 text-center text-sm sm:text-xs font-mono tabular-nums",
+                                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
+                                pctError && "border-danger",
+                              )}
+                            />
+                            <span className="shrink-0 text-xs font-mono text-muted-foreground">
+                              %
+                            </span>
+                            <input
+                              id={`field-${pair.mmKey}`}
+                              type="number"
+                              step="0.1"
+                              min="0"
+                              placeholder="XX"
+                              aria-label={pair.mmLabel}
+                              aria-invalid={!!mmError}
+                              value={form[pair.mmKey]}
+                              onChange={(e) =>
+                                setField(pair.mmKey, e.target.value)
+                              }
+                              className={cn(
+                                "h-10 sm:h-9 w-full rounded border border-border bg-surface px-2 sm:px-1.5 text-center text-sm sm:text-xs font-mono tabular-nums",
+                                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
+                                mmError && "border-danger",
+                              )}
+                            />
+                            <span className="shrink-0 text-xs font-mono text-muted-foreground">
+                              cm
+                            </span>
+                          </div>
+                          {rowError ? (
+                            <p
+                              role="alert"
+                              className="text-[11px] font-medium text-danger"
+                            >
+                              {rowError}
+                            </p>
+                          ) : null}
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
               </div>

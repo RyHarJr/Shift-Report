@@ -213,6 +213,8 @@ export const shiftReportInputSchema = z.object({
   diameterMm1: optionalNumber(0, 2000),
   diameterPct2: optionalPercentage("4.6 Persentase 2"),
   diameterMm2: optionalNumber(0, 2000),
+  diameterPct3: optionalPercentage("4.6 Persentase 3"),
+  diameterMm3: optionalNumber(0, 2000),
   rawMaterialRemarks: optionalString(2000),
   rawMaterialRemarksPhotoUrl: optionalPhotoUrl,
   rawMaterialRemarks2: optionalString(2000),

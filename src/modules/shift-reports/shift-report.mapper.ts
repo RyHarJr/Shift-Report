@@ -101,6 +101,8 @@ export function toShiftReportDTO(report: ShiftReport): ShiftReportDTO {
     diameterMm1: report.diameterMm1,
     diameterPct2: report.diameterPct2,
     diameterMm2: report.diameterMm2,
+    diameterPct3: report.diameterPct3,
+    diameterMm3: report.diameterMm3,
     rawMaterialRemarks: report.rawMaterialRemarks,
     rawMaterialRemarksPhotoUrl: report.rawMaterialRemarksPhotoUrl,
     rawMaterialRemarks2: report.rawMaterialRemarks2,

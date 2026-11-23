@@ -127,6 +127,8 @@ function buildPersistencePayload(
     diameterMm1: parsed.diameterMm1,
     diameterPct2: parsed.diameterPct2,
     diameterMm2: parsed.diameterMm2,
+    diameterPct3: parsed.diameterPct3,
+    diameterMm3: parsed.diameterMm3,
     rawMaterialRemarks: parsed.rawMaterialRemarks,
     rawMaterialRemarksPhotoUrl: parsed.rawMaterialRemarksPhotoUrl,
     rawMaterialRemarks2: parsed.rawMaterialRemarks2,

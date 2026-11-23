@@ -89,6 +89,8 @@ export interface ShiftReportDTO {
   diameterMm1: number | null;
   diameterPct2: number | null;
   diameterMm2: number | null;
+  diameterPct3: number | null;
+  diameterMm3: number | null;
   rawMaterialRemarks: string | null;
   rawMaterialRemarksPhotoUrl: string | null;
   rawMaterialRemarks2: string | null;

@@ -1355,7 +1355,8 @@ function drawPage2(
   // =========================================================
   const s4Y = s3Y + s3TotalH + 10;
   const s4RowH = 22;
-  const s4TotalH = s4RowH * 7 + 8; // 162
+  const s4PctRowH = 38;
+  const s4TotalH = s4RowH * 6 + s4PctRowH + 8; // 178
   drawDoubleFrame(doc, PAGE_LEFT, s4Y, CONTENT_W, s4TotalH);
 
   let ry = s4Y + 3;
@@ -1455,35 +1456,54 @@ function drawPage2(
   }
 
   // 4.6 Percentage Log Diameter
-  drawCellBox(doc, inX, ry, s3CodeW, s4RowH);
-  drawCellBox(doc, inX + s3CodeW, ry, s4LblW, s4RowH);
-  drawCellBox(doc, inX + s3CodeW + s4LblW, ry, s4RightW, s4RowH);
+  drawCellBox(doc, inX, ry, s3CodeW, s4PctRowH);
+  drawCellBox(doc, inX + s3CodeW, ry, s4LblW, s4PctRowH);
+  drawCellBox(doc, inX + s3CodeW + s4LblW, ry, s4RightW, s4PctRowH);
 
-  const d1Pct = fmtOptNum(report.diameterPct1, 1);
-  const d1Mm = fmtOptNum(report.diameterMm1, 1);
-  const d2Pct = fmtOptNum(report.diameterPct2, 1);
-  const d2Mm = fmtOptNum(report.diameterMm2, 1);
-  const pairText =
-    d1Pct || d1Mm || d2Pct || d2Mm
-      ? `${d1Pct || "—"} %  ${d1Mm || "—"} cm    |    ${d2Pct || "—"} %  ${d2Mm || "—"} cm`
-      : "";
+  const diameterLines = (
+    [
+      [report.diameterPct1, report.diameterMm1],
+      [report.diameterPct2, report.diameterMm2],
+      [report.diameterPct3, report.diameterMm3],
+    ] as const
+  )
+    .map(([pctVal, cmVal]) => {
+      const pct = fmtOptNum(pctVal, 1);
+      const cm = fmtOptNum(cmVal, 1);
+      if (!pct && !cm) return null;
+      return `${pct || "—"} %   ${cm || "—"} cm`;
+    })
+    .filter((line): line is string => line !== null);
 
   doc
     .font("Helvetica")
     .fontSize(8)
     .fillColor(DARK)
-    .text("4.6", inX, ry + 7, { width: s3CodeW, align: "center" });
-  doc.text("Percentage Log Diameter", inX + s3CodeW + 6, ry + 7, {
-    width: s4LblW - 8,
-  });
-  doc
-    .font("Helvetica-Bold")
-    .fontSize(7)
-    .text(pairText, inX + s3CodeW + s4LblW + 4, ry + 7, {
-      width: s4RightW - 8,
+    .text("4.6", inX, ry + (s4PctRowH - 9) / 2, {
+      width: s3CodeW,
       align: "center",
     });
-  ry += s4RowH;
+  doc.text("Percentage Log Diameter", inX + s3CodeW + 6, ry + (s4PctRowH - 9) / 2, {
+    width: s4LblW - 8,
+  });
+
+  if (diameterLines.length > 0) {
+    const pairText = diameterLines.join("\n");
+    const fontSize = 7.2;
+    const lineGap = 1.5;
+    doc.font("Helvetica-Bold").fontSize(fontSize);
+    const textHeight = doc.heightOfString(pairText, {
+      width: s4RightW - 8,
+      lineGap,
+    });
+    const textY = ry + Math.max(3, (s4PctRowH - textHeight) / 2);
+    doc.text(pairText, inX + s3CodeW + s4LblW + 4, textY, {
+      width: s4RightW - 8,
+      align: "center",
+      lineGap,
+    });
+  }
+  ry += s4PctRowH;
 
   // Section 4 Remarks Box (1 Bagan tunggal + inline photo)
   const s4RemH = ry - s4StartY;

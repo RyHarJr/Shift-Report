@@ -742,6 +742,11 @@ export function ShiftReportPrintView({ report }: ShiftReportPrintViewProps) {
                       ? `${formatNumber(report.diameterPct2, 1)} % / ${formatNumber(report.diameterMm2, 1)} CM`
                       : "—"}
                   </p>
+                  <p>
+                    {report.diameterPct3 !== null || report.diameterMm3 !== null
+                      ? `${formatNumber(report.diameterPct3, 1)} % / ${formatNumber(report.diameterMm3, 1)} CM`
+                      : "—"}
+                  </p>
                 </div>
               </div>
             </div>

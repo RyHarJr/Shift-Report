@@ -14,7 +14,7 @@ Formulir digital terstruktur yang mengikuti format lembar inspeksi standar 2 hal
 - **Bagian 3 — Chipper Condition**:
   - **3.1 Geometry**: `T Dimension (mm)`, `Clearance Anvil (mm)`, *Last Setting Date*, Remarks, dan foto opsional.
   - **3.2 Part**: Penilaian kondisi 12 komponen (`Good`, `Worn Out`, `Broken`) dengan tombol bantu *"Tandai Semua Good"*, ditambah 4 slot Remarks dan foto opsional.
-- **Bagian 4 — Raw Material (`4.1`–`4.6`)**: Log Yard Number, Log Age, Aging in Storage, rata-rata diameter, kadar air log, 2 pasang distribusi persentase diameter (`%` & `MM`), serta 2 slot Remarks dan foto opsional.
+- **Bagian 4 — Raw Material (`4.1`–`4.6`)**: Log Yard Number, Log Age, Aging in Storage, rata-rata diameter, kadar air log, 3 pasang distribusi persentase diameter (`%` & `cm`), serta 2 slot Remarks dan foto opsional.
 
 ### 2. Dashboard Admin Terproteksi (`/admin`)
 - **Autentikasi Admin (`/admin/login`)**: Login berbasis username dan password dengan cookie sesi terenkripsi JWT (`jose`) dan pencatatan sesi di tabel `admin_sessions` (diproteksi melalui [src/proxy.ts](src/proxy.ts)).

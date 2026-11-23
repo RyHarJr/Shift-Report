@@ -147,6 +147,8 @@ model ShiftReport {
   diameterMm1         Float?
   diameterPct2        Float?
   diameterMm2         Float?
+  diameterPct3        Float?
+  diameterMm3         Float?
   rawMaterialRemarks         String? @db.Text
   rawMaterialRemarksPhotoUrl String? @db.VarChar(500)
   rawMaterialRemarks2        String? @db.Text
